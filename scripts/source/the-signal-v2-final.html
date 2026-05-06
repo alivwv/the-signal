@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Signal — PR & Communications Learning Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#F8FFE5;--bg-card:#FFFFFF;--bg-surface:#f0f0e6;
+--char:#22282B;--char-l:#30332D;--black:#030303;--deep:#000710;
+--teal:#0B5351;--teal-d:#073a39;--green:#88D4AB;--mint:#BCE7C9;--mint-p:#e4f5eb;
+--lime:#CBFF08;--gray:#8A8B7D;--silver:#EDEDED;--silver-d:#CFCFCF;
+--sage:#558564;--bright:#4AD59A;--lmint:#A4F9C8;
+--txt1:#22282B;--txt2:#555;--txt3:#8A8B7D;--border:#ddd;--border-l:#eee;
+--ok:#2E7D32;--ok-l:#E8F5E9;--bad:#C62828;--bad-l:#FFEBEE;--warn:#B8860B;--warn-l:#FDF4DC;
+--fd:'IBM Plex Serif',Georgia,serif;--fb:'IBM Plex Sans',system-ui,sans-serif;--fa:'IBM Plex Sans Arabic','IBM Plex Sans',system-ui,sans-serif;
+--r:8px;--rl:12px;--sh:0 1px 3px rgba(0,0,0,.06);--shm:0 4px 12px rgba(0,0,0,.08);--tr:.2s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--txt1);line-height:1.7;-webkit-font-smoothing:antialiased;font-size:14px}
+html[dir=rtl] body{font-family:var(--fa)}
+html[dir=rtl] .sb{left:auto;right:0}html[dir=rtl] .mn{margin-left:0;margin-right:260px}
+html[dir=rtl] .ni{border-left:none;border-right:3px solid transparent}html[dir=rtl] .ni.on{border-right-color:var(--lime)}
+html[dir=rtl] .nb{margin-left:0;margin-right:auto}
+html[dir=rtl] .hl{border-left:none;border-right:3px solid var(--teal);border-radius:var(--r) 0 0 var(--r)}
+@media(max-width:768px){html[dir=rtl] .mn{margin-right:0}html[dir=rtl] .sb{transform:translateX(100%)}html[dir=rtl] .sb.open{transform:translateX(0)}}
+
+.app{display:flex;min-height:100vh}
+.sb{width:260px;min-height:100vh;background:var(--deep);color:#eee;position:fixed;left:0;top:0;z-index:100;display:flex;flex-direction:column;transition:transform var(--tr);overflow-y:auto}
+.sbh{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sbb{display:flex;align-items:center;gap:9px}
+.sbm{width:34px;height:34px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--mint)}
+.sbn{font-family:var(--fd);font-size:20px;color:#fff;font-weight:500}.sbn em{font-style:italic;color:var(--lime)}
+.sbt{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.2);margin-top:5px}
+.snv{flex:1;padding:10px 0}
+.nsl{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.18);padding:12px 18px 4px;font-weight:600}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 18px;font-size:12.5px;color:rgba(255,255,255,.4);cursor:pointer;transition:all var(--tr);border-left:3px solid transparent;font-weight:500}
+.ni:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.03)}
+.ni.on{color:#fff;background:rgba(203,255,8,.05);border-left-color:var(--lime)}
+.nb{margin-left:auto;font-size:9px;padding:2px 7px;border-radius:8px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);font-weight:700}
+.ni.on .nb{background:var(--teal);color:var(--mint)}
+.sbf{padding:14px 18px;border-top:1px solid rgba(255,255,255,.06);font-size:9px;color:rgba(255,255,255,.15)}
+.pbw{background:rgba(255,255,255,.06);border-radius:3px;height:4px;margin:5px 0 6px;overflow:hidden}
+.pbf{height:100%;background:var(--lime);border-radius:3px;transition:width .5s}
+.sbcf{margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;font-size:9px;color:rgba(255,255,255,.25);line-height:1.5}
+
+.mn{margin-left:260px;flex:1;min-width:0}
+.tb{position:sticky;top:0;z-index:50;background:rgba(248,255,229,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-l);padding:10px 28px;display:flex;align-items:center;justify-content:space-between}
+.tbt{font-size:12px;font-weight:600;color:var(--txt2)}
+.tbr{display:flex;align-items:center;gap:8px}
+.lt{display:flex;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.lb{padding:5px 12px;cursor:pointer;background:var(--bg-card);color:var(--txt2);border:none;font-size:11px;font-weight:600;font-family:var(--fb);transition:all var(--tr)}
+.lb.on{background:var(--teal);color:var(--mint)}
+.ct{padding:24px 28px 50px;max-width:900px}
+
+.ph{margin-bottom:22px}.pe{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--teal);font-weight:700;margin-bottom:5px}
+.pt{font-family:var(--fd);font-size:28px;line-height:1.25;font-weight:500}html[dir=rtl] .pt{font-family:var(--fa);font-size:24px;line-height:1.4}
+.pt em{font-style:italic;color:var(--teal)}.pd{font-size:13.5px;color:var(--txt2);margin-top:6px;max-width:600px;line-height:1.7}
+
+.ntc{background:linear-gradient(135deg,var(--deep),var(--char));color:#fff;border-radius:var(--rl);padding:16px 20px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start}
+.ntc-t{font-weight:700;font-size:13px;margin-bottom:3px}.ntc-b{font-size:12px;color:var(--mint);line-height:1.6;opacity:.85}
+
+.crd{background:var(--bg-card);border:1px solid var(--border-l);border-radius:var(--rl);padding:18px;margin-bottom:12px;box-shadow:var(--sh)}
+.crd-t{font-size:15px;font-weight:600;margin-bottom:4px}.crd-b{font-size:13px;color:var(--txt2);line-height:1.75}.crd-b p+p{margin-top:8px}
+
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:18px 0}
+.mc{background:var(--bg-card);border:1px solid var(--border-l);border-radius:var(--rl);overflow:hidden;cursor:pointer;box-shadow:var(--sh);transition:all var(--tr)}
+.mc:hover{box-shadow:var(--shm);transform:translateY(-2px)}
+.mcb{height:5px}.mcb.t1{background:var(--teal)}.mcb.t2{background:var(--green)}.mcb.t3{background:var(--sage)}
+.mcc{padding:16px 18px}.mcn{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--txt3);font-weight:700}
+.mcm{font-family:var(--fd);font-size:17px;margin:4px 0;line-height:1.3;font-weight:500}html[dir=rtl] .mcm{font-family:var(--fa);font-size:15px}
+.mcd{font-size:12px;color:var(--txt2);line-height:1.5;margin-bottom:12px}.mcmt{font-size:11px;color:var(--txt3)}
+
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+@media(max-width:600px){.sg{grid-template-columns:repeat(2,1fr)}}
+.si{text-align:center;padding:12px;background:var(--bg-surface);border-radius:var(--r)}
+.sv{font-family:var(--fd);font-size:24px;color:var(--teal);font-weight:500}.sl{font-size:9px;color:var(--txt3);margin-top:2px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+
+.tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid var(--border-l)}
+.tabtn{padding:8px 14px;font-size:12px;font-weight:600;background:none;border:none;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all var(--tr);font-family:inherit}
+.tabtn:hover{color:var(--txt1)}.tabtn.on{color:var(--teal);border-bottom-color:var(--teal)}
+.tp{display:none;animation:fi .3s ease}.tp.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.les{margin-bottom:10px}
+.lh{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg-card);border:1px solid var(--border-l);border-radius:var(--r);cursor:pointer;transition:all var(--tr)}
+.lh:hover{border-color:var(--border)}.lh.op{border-radius:var(--r) var(--r) 0 0;border-bottom-color:transparent}
+.ln{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:var(--mint-p);color:var(--teal);flex-shrink:0}
+.ln.dn{background:var(--ok-l);color:var(--ok)}
+.ltt{font-size:13px;font-weight:600;flex:1}.ldur{font-size:10px;color:var(--txt3);font-weight:500}
+.larr{font-size:12px;color:var(--txt3);transition:transform var(--tr)}.lh.op .larr{transform:rotate(180deg)}
+.lbd{display:none;padding:18px;background:var(--bg-card);border:1px solid var(--border-l);border-top:none;border-radius:0 0 var(--r) var(--r)}
+.lbd.op{display:block;animation:fi .3s ease}
+
+.cpt{background:var(--bg-surface);border-radius:var(--r);padding:14px;margin:10px 0}
+.cl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:4px}
+.cl.k{color:var(--teal)}.cl.ex{color:#C0533A}.cl.kp{color:var(--warn)}.cl.cs{color:var(--sage)}
+.ctit{font-family:var(--fd);font-size:15px;margin-bottom:4px;font-weight:500}html[dir=rtl] .ctit{font-family:var(--fa);font-size:14px}
+.cb{font-size:13px;color:var(--txt2);line-height:1.75}.cb p+p{margin-top:7px}
+
+.hl{border-left:3px solid var(--teal);padding:12px 14px;background:var(--mint-p);border-radius:0 var(--r) var(--r) 0;margin:10px 0}
+.hl p{font-size:13px;color:var(--teal-d);line-height:1.7}
+
+.fw-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;margin:10px 0}
+.fw-i{text-align:center;padding:12px 8px;border-radius:var(--r);border:1.5px solid var(--border-l);background:var(--bg-card);cursor:pointer;transition:all var(--tr)}
+.fw-i:hover{border-color:var(--green)}.fw-i.on{border-color:var(--teal);background:var(--mint-p)}
+.fw-ic{font-size:18px;display:block;margin-bottom:3px}.fw-nm{font-size:11px;font-weight:700}
+.fw-d{display:none;padding:12px;background:var(--mint-p);border-radius:var(--r);margin-top:8px;font-size:12.5px;color:var(--txt2);line-height:1.7}
+.fw-d.on{display:block;animation:fi .25s ease}
+
+.stw{margin:12px 0}.str{display:flex;cursor:pointer;border:1px solid var(--border-l);border-bottom:none;background:var(--bg-card);transition:all var(--tr)}
+.str:first-child{border-radius:var(--r) var(--r) 0 0}.str:last-of-type{border-bottom:1px solid var(--border-l);border-radius:0 0 var(--r) var(--r)}
+.str:hover,.str.on{background:var(--mint-p)}
+.stnc{width:40px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:15px;color:var(--teal);border-right:1px solid var(--border-l);flex-shrink:0}
+html[dir=rtl] .stnc{border-right:none;border-left:1px solid var(--border-l)}
+.str.on .stnc{background:var(--teal);color:var(--lime)}
+.sttc{padding:10px 12px;flex:1;font-size:13px;font-weight:600;display:flex;align-items:center}
+.stac{width:30px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--txt3)}
+.std{display:none;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border-l);border-top:none;font-size:13px;color:var(--txt2);line-height:1.75}
+.std.on{display:block;animation:fi .25s ease}
+
+.pcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:6px;margin:10px 0}
+.pci{text-align:center;padding:12px 6px;border-radius:var(--r);border:1.5px solid var(--border-l);background:var(--bg-card);cursor:pointer;transition:all var(--tr)}
+.pci:hover{border-color:var(--green)}.pci.on{border-color:var(--teal);background:var(--mint-p)}
+.pcl{font-family:var(--fd);font-size:24px;color:var(--teal);display:block}.pcw{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--txt2);margin-top:3px}
+.pcd{display:none;padding:12px;background:var(--mint-p);border-radius:var(--r);margin-top:8px;font-size:12.5px;color:var(--txt2);line-height:1.7}
+.pcd.on{display:block;animation:fi .25s ease}
+
+.atg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin:10px 0}
+.atc{padding:14px;border-radius:var(--r);border:1px solid var(--border-l);background:var(--bg-card)}
+.ath{font-size:13px;font-weight:700;margin-bottom:3px}.atb{font-size:12px;color:var(--txt2);line-height:1.6}
+
+.qz{margin:12px 0}.qq{font-size:13px;font-weight:600;margin-bottom:8px}
+.qos{display:flex;flex-direction:column;gap:5px}
+.qo{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid var(--border-l);border-radius:var(--r);cursor:pointer;font-size:12.5px;background:var(--bg-card);transition:all var(--tr)}
+.qo:hover{border-color:var(--border);background:var(--bg-surface)}
+.qo.sel{border-color:var(--teal);background:var(--mint-p)}
+.qo.ok{border-color:var(--ok);background:var(--ok-l)}.qo.no{border-color:var(--bad);background:var(--bad-l)}
+.qr{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.qo.sel .qr{border-color:var(--teal)}.qo.sel .qr::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal)}
+.qo.ok .qr{border-color:var(--ok)}.qo.ok .qr::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.qfb{margin-top:8px;padding:10px;border-radius:var(--r);font-size:12px;line-height:1.5;display:none}
+.qfb.sh{display:block;animation:fi .3s ease}.qfb.y{background:var(--ok-l);color:var(--ok)}.qfb.n{background:var(--bad-l);color:var(--bad)}
+
+.scc{border:1px solid var(--border-l);border-radius:var(--rl);overflow:hidden;margin:12px 0;background:var(--bg-card)}
+.sch{padding:16px 18px;background:linear-gradient(135deg,var(--deep),var(--char));color:#fff}
+.sce{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.35);font-weight:700}
+.sctt{font-size:15px;font-weight:600;margin-top:3px}
+.scbd{padding:16px}.scst{font-size:13px;color:var(--txt2);line-height:1.75;margin-bottom:12px;padding:12px;background:var(--bg-surface);border-radius:var(--r)}
+.sccs{display:flex;flex-direction:column;gap:5px}
+.scch{padding:10px 12px;border:1px solid var(--border-l);border-radius:var(--r);cursor:pointer;font-size:12.5px;transition:all var(--tr)}
+.scch:hover{border-color:var(--border);background:var(--bg-surface)}
+.scch.best{border-color:var(--ok);background:var(--ok-l)}.scch.decent{border-color:var(--warn);background:var(--warn-l)}.scch.poor{border-color:var(--bad);background:var(--bad-l)}
+.scrs{display:none;padding:12px;border-radius:var(--r);margin-top:8px;font-size:12px;line-height:1.6}
+.scrs.sh{display:block;animation:fi .3s ease}
+
+.tag{display:inline-flex;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:12px}
+.tag-t{background:var(--mint-p);color:var(--teal)}.tag-s{background:#e8f0e8;color:var(--sage)}
+.tag-w{background:var(--warn-l);color:var(--warn)}.tag-c{background:#FBEAE5;color:#C0533A}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:12px;font-weight:600;font-family:inherit;border-radius:var(--r);cursor:pointer;border:none;transition:all var(--tr)}
+.btn-p{background:var(--teal);color:var(--mint)}.btn-p:hover{background:var(--teal-d)}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--txt1)}.btn-o:hover{background:var(--bg-surface)}
+.btn-ok{background:var(--ok-l);color:var(--ok);border:1px solid #C8E6C9}
+.divider{height:1px;background:var(--border-l);margin:18px 0}
+.kt{font-weight:600;color:var(--teal)}
+
+.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:4px}
+@media(max-width:768px){.sb{transform:translateX(-100%)}.sb.open{transform:translateX(0)}.mn{margin-left:0}.ct{padding:18px 14px}.tb{padding:10px 14px}.menu-btn{display:block!important}.sg{grid-template-columns:repeat(2,1fr)}.mg{grid-template-columns:1fr}}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}.ov.sh{display:block}
+</style>
+</head>
+<body>
+<div class="ov" id="ov" onclick="tgSb()"></div>
+<div class="app">
+<aside class="sb" id="sb">
+<div class="sbh"><div class="sbb"><div class="sbm">PRt</div><div class="sbn"><em>The</em> Signal</div></div><div class="sbt" id="sbTag"></div></div>
+<div class="snv" id="sbNav"></div>
+<div class="sbf"><div style="font-size:10px;color:rgba(255,255,255,.25);margin-bottom:3px" id="pL"></div><div class="pbw"><div class="pbf" id="gP" style="width:0%"></div></div>
+<div class="sbcf" id="cfNote"></div>
+</div>
+</aside>
+<main class="mn">
+<header class="tb">
+<div style="display:flex;align-items:center;gap:8px">
+<button class="menu-btn" onclick="tgSb()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<div class="tbt" id="tbT"></div>
+</div>
+<div class="tbr"><div class="lt"><button class="lb on" id="lEN" onclick="sL('en')">EN</button><button class="lb" id="lAR" onclick="sL('ar')">عربي</button></div></div>
+</header>
+<div class="ct" id="mc"></div>
+</main>
+</div>
+<script>
+let L='en',CP='home';
+const LS_KEY='signal_progress_v2';
+function getSaved(){try{return JSON.parse(localStorage.getItem(LS_KEY))||{}}catch(e){return {}}}
+function saveDone(id){const d=getSaved();d[id]=1;localStorage.setItem(LS_KEY,JSON.stringify(d))}
+function isDone(id){return getSaved()[id]}
+
+const T={en:{
+sbTag:'PR & Comms Learning Hub',pL:'Overall progress',
+cfNote:'This platform is for internal team use only. Content is proprietary and should not be shared outside the organization.',
+nav:{home:'Dashboard',m1:'IMC Framework',m2:'PR Tools & Tactics',m3:'Stakeholder Strategy',cases:'Case Studies',sc:'Scenario Lab',gls:'Glossary'},
+navS:{ov:'Overview',mod:'Modules',pr:'Practice',ref:'Reference'},
+tbT:{home:'Dashboard',m1:'Module 01: IMC',m2:'Module 02: PR Tools',m3:'Module 03: Stakeholders',cases:'Case Studies',sc:'Scenario Lab',gls:'Glossary'},
+glsT:'<em>Glossary</em>',glsD:'Key terms from Kotler\'s frameworks and professional PR practice. Search or browse.',
+gls:[
+{t:'IMC (Integrated Marketing Communications)',d:'Coordinating all promotional tools to deliver a consistent, unified message across all channels. Kotler\'s foundational concept.'},
+{t:'Promotional Mix',d:'Kotler\'s five tools: Advertising, PR, Sales Promotion, Personal Selling, and Direct Marketing.'},
+{t:'PENCILS',d:'Kotler\'s PR toolkit acronym: Publications, Events, News, Community involvement, Identity media, Lobbying, Social responsibility.'},
+{t:'ATL (Above the Line)',d:'Mass, untargeted communications: TV, radio, print ads, billboards. High reach, hard to measure direct impact.'},
+{t:'BTL (Below the Line)',d:'Targeted, direct engagement: events, sponsorships, direct mail, PR, influencer outreach. Measurable and personal.'},
+{t:'TTL (Through the Line)',d:'Integrated approach combining ATL reach with BTL engagement. Digital advertising lives here.'},
+{t:'360-Degree Communications',d:'Every touchpoint coordinated around one strategic narrative — IMC in its fullest expression.'},
+{t:'Hierarchy-of-Effects',d:'Awareness → Knowledge → Liking → Preference → Conviction → Purchase. Diagnostic for audience readiness stage.'},
+{t:'Encoding',d:'Putting the intended message into symbolic form. How you frame and package information for a specific audience.'},
+{t:'Decoding',d:'How the receiver interprets the message. Effective PR ensures encoding matches the audience\'s decoding framework.'},
+{t:'Noise',d:'Unplanned distortions — competing messages, preconceptions, media clutter — that alter how a message is received.'},
+{t:'Earned Media',d:'Publicity gained through editorial influence rather than paid placement. PR\'s core output and highest-credibility channel.'},
+{t:'Paid Media',d:'Any media placement purchased directly: ads, sponsored content, boosted social posts. Full message control but lower credibility.'},
+{t:'Owned Media',d:'Channels you control: website, blog, social accounts, newsletters, app. Full control, limited reach without amplification.'},
+{t:'Shared Media',d:'Content distributed and discussed by others: social shares, user-generated content, community posts. High credibility, low control.'},
+{t:'PESO Model',d:'Framework organizing media into Paid, Earned, Shared, and Owned — used for integrated communications planning.'},
+{t:'Share of Voice (SOV)',d:'Percentage of total industry conversation that mentions your brand vs competitors. Key competitive metric.'},
+{t:'Message Pull-Through',d:'Whether your key messages actually appear in final media coverage. Measures if journalists adopted your narrative.'},
+{t:'AVE (Advertising Value Equivalent)',d:'Estimated cost of buying equivalent ad space for earned media coverage. Widely used but increasingly criticized.'},
+{t:'Sentiment Analysis',d:'Automated or manual measurement of whether media/social mentions are positive, negative, or neutral.'},
+{t:'Media Impression',d:'One instance of content being displayed to a potential viewer. Not the same as a person actually reading or engaging.'},
+{t:'Reach',d:'Total number of unique individuals who saw a piece of content. Different from impressions (which count repeats).'},
+{t:'Frequency',d:'Average number of times each person sees your message. Optimal frequency varies by objective and audience.'},
+{t:'GRP (Gross Rating Points)',d:'Reach × Frequency. A media schedule reaching 80% of homes with average frequency of 3 has a GRP of 240.'},
+{t:'News Peg',d:'The timely hook that makes a story relevant now — a new policy, published data, seasonal event, or public controversy.'},
+{t:'Holding Statement',d:'Brief statement acknowledging a situation while buying time to develop a full response. Essential crisis PR tool.'},
+{t:'Boilerplate',d:'Standard company description at the end of a press release. 2-3 sentences covering who, what, and scale.'},
+{t:'Inverted Pyramid',d:'News writing structure: most important information first, supporting details in descending order. Standard for press releases.'},
+{t:'Op-Ed',d:'Opinion piece published under an individual\'s name in a media outlet. From "opposite the editorial page." A thought-leadership tool.'},
+{t:'Byline Article',d:'Longer-form article published under a spokesperson\'s name in a trade or business publication. Demonstrates expertise.'},
+{t:'Embargo',d:'Agreement with a journalist to receive information early but not publish until a specified date/time. Based entirely on trust.'},
+{t:'Off the Record',d:'Information shared with a journalist that cannot be published or attributed. Risky — always verify the journalist agrees to terms first.'},
+{t:'On Background',d:'Information a journalist can use but cannot attribute to the source by name. Often cited as "a company spokesperson."'},
+{t:'KOL (Key Opinion Leader)',d:'Individual with established credibility and influence within a specific community. More authoritative than a social media influencer.'},
+{t:'Stakeholder',d:'Any individual or group that can affect or is affected by the organization\'s actions. Includes media, government, customers, employees, investors, communities.'},
+{t:'Familiarity-Favorability Matrix',d:'Kotler\'s 2-axis diagnostic: how well-known you are × how positively you\'re viewed. Determines communication strategy.'},
+{t:'Source Credibility',d:'Kotler\'s three factors determining spokesperson effectiveness: Expertise, Trustworthiness, and Likability.'},
+{t:'Atmospherics',d:'Kotler\'s term for designed environments that reinforce a message. Events, store design, and branded spaces.'},
+{t:'Media Kit / Press Kit',d:'Comprehensive package giving journalists everything needed for accurate coverage: overview, facts, bios, assets, contacts.'},
+{t:'Crisis Communications',d:'Strategic management of information during events that threaten organizational reputation or operations.'},
+{t:'Dark Site',d:'Pre-built web page held in reserve for crisis situations. Published only when a crisis hits — saves critical hours.'},
+{t:'Spokesperson',d:'Designated individual authorized to speak on behalf of the organization to media and public audiences.'},
+{t:'Media Training',d:'Coaching executives and spokespeople on interview techniques, message discipline, and handling hostile questions.'},
+{t:'Bridge / Pivot',d:'Interview technique: acknowledging a question, then redirecting to your key message. "That\'s important, and what\'s equally important is..."'},
+{t:'Sound Bite',d:'Short, quotable statement designed to be used in broadcast or print coverage. Should be under 10 seconds spoken.'},
+{t:'Thought Leadership',d:'Strategic positioning of an individual or organization as an authority in a specific domain through content and commentary.'},
+{t:'CSR (Corporate Social Responsibility)',d:'Business practices that contribute positively to society. A PR pillar that builds goodwill and generates earned media.'},
+{t:'ESG',d:'Environmental, Social, and Governance criteria used to evaluate corporate responsibility. Increasingly important for stakeholder communications.'},
+{t:'Narrative Architecture',d:'The structured framework: master narrative → pillar messages → proof points → channel-specific content.'},
+{t:'Content Calendar',d:'Planning tool that schedules content across channels over time. Ensures consistency and prevents gaps.'},
+{t:'Media Monitoring',d:'Systematic tracking of media coverage across print, broadcast, digital, and social channels. Foundation for measurement.'},
+{t:'Clipping',d:'A single piece of media coverage. "Clippings" refers to the collection of all coverage from a campaign or time period.'},
+{t:'Informational Appeal',d:'Message that elaborates on product attributes or benefits. Assumes rational processing. Problem-solution, comparison, testimonial.'},
+{t:'Transformational Appeal',d:'Message that elaborates on non-product benefits or image. Uses emotional appeals: fear, guilt, humor, love, pride, joy.'},
+{t:'Two-Step Flow',d:'Theory that ideas flow from mass media to opinion leaders, then from opinion leaders to broader population groups.'},
+{t:'Communication Audit',d:'A profile of all interactions customers may have with the company — used as the starting point for IMC planning.'},
+{t:'Creative Brief',d:'1-2 page document covering key message, target audience, objectives, brand benefits, and media. The most important campaign document.'},
+{t:'Pulsing',d:'Media timing pattern: continuous advertising at low levels, reinforced by periodic waves of heavier activity. Kotler\'s recommended approach.'},
+{t:'Flighting',d:'Media timing pattern: advertising during a period, followed by no advertising, then advertising again. Used for seasonal products.'},
+{t:'Forward Buying',d:'Retailers buying more than needed during a deal period. A trade promotion challenge for manufacturers.'},
+{t:'Experiential Marketing',d:'Creating immersive experiences that connect a product with consumers\' lives. "Not to sell something, but to demonstrate how a brand enriches life."'},
+{t:'Marketing Public Relations (MPR)',d:'PR specifically supporting the marketing department in product promotion and image making. Goes beyond traditional publicity.'},
+],
+homeEye:'Welcome to The Signal',homeT:'Learn PR &<br><em>Communications</em>',
+homeD:'A structured learning platform grounded in Philip Kotler\'s marketing frameworks. From theory to practice — one signal at a time.',
+ntcT:'Practice 01 of a learning series',
+ntcB:'This is the first practice in an ongoing learning journey. This edition is grounded in <strong>Philip Kotler\'s textbooks</strong> and international case studies. Future practices will feature <strong>local market examples and region-specific strategies</strong>.',
+sM:'Modules',sL:'Lessons',sC:'Case Studies',sS:'Scenarios',ym:'Your modules',
+m1n:'Module 01',m1m:'Kotler\'s IMC & the Promotional Mix',m1d:'The strategic backbone. From the promotional mix to ATL/BTL/TTL and message consistency.',
+m2n:'Module 02',m2m:'PR Tools & Tactics',m2d:'Press releases, op-eds, media kits, events, spokesperson strategy, and influencer engagement.',
+m3n:'Module 03',m3m:'Stakeholder Mapping & Audience Strategy',m3d:'Identify, prioritize, and engage every audience. Build influence maps and tailor communications.',
+tabL:'Lessons',tabQ:'Knowledge check',tabC:'Case study',
+mc:'Mark as complete ✓',done:'Completed',chk:'Check answers',qY:'Correct!',qN:'Not quite — review the lesson.',
+min:'min',les:'lessons',
+
+// MODULE 1 (keeping strong content as-is)
+m1l:[
+{t:'What is Integrated Marketing Communications?',d:'5',
+b:'<p><strong>Integrated Marketing Communications (IMC)</strong> is the concept under which a company carefully integrates and coordinates its many communications channels to deliver a clear, consistent, and compelling message about the organization and its products.</p><p>Customers don\'t distinguish between message sources the way marketers do. A social media post, a billboard, a customer service call, and a news article all feel like they come from the same brand. If those messages conflict, trust erodes.</p>',
+hl:'<strong>Kotler:</strong> "IMC involves identifying the target audience and shaping a well-coordinated promotional program to elicit the desired audience response."',
+ex:{l:'Simple example',t:'A restaurant opening in Baghdad',b:'<p>Imagine a new restaurant opening. <strong>Without IMC:</strong> Instagram shows luxury fine-dining, flyers promise "affordable family meals," and the manager tells a blogger it\'s "a casual hangout." Three messages — the customer is confused.</p><p><strong>With IMC:</strong> The core story is "authentic cuisine, elevated." Instagram shows beautifully plated dishes. Flyers say "your favourite flavours, reimagined." The blogger gets the chef\'s personal story. Every touchpoint reinforces the same idea. Trust builds.</p>'}},
+{t:'The Promotional Mix: Kotler\'s 5 Tools & PENCILS',d:'8',
+b:'<p>Kotler identifies five major tools in the <span class="kt">promotional mix</span>. Each has unique characteristics.</p>',hasFW:1,hasPC:1,
+pcIntro:'Kotler also defines the <span class="kt">PENCILS framework</span> — the seven specific tools within PR:'},
+{t:'ATL, BTL, TTL & 360-Degree Communications',d:'6',
+b:'<p>Beyond the promotional mix, the industry uses a practical classification for how communications reach audiences.</p>',hasATL:1,
+atlHL:'<strong>PR\'s position:</strong> PR is primarily BTL (targeted, relationship-based), but when coverage goes viral or a crisis hits national news, it operates at ATL scale. A 360° campaign always includes PR as the credibility layer.'},
+{t:'PR\'s Unique Role in the Mix',d:'5',
+b:'<p><strong>1. High credibility.</strong> News stories and features are more authentic to readers than ads.</p><p><strong>2. Reaching hard-to-find buyers.</strong> PR reaches prospects who avoid ads. The message arrives as "news."</p><p><strong>3. Dramatization.</strong> PR dramatizes through events, stories, and experiences.</p>',
+hl:'<strong>The paradox:</strong> PR\'s greatest strength (earned credibility) is its greatest limitation — you cannot fully control the message. That\'s why narrative architecture and spokesperson prep are critical.'},
+{t:'Kotler\'s Communication Process Model',d:'5',
+b:'<p>Think of it like a phone call with bad reception. You (sender) encode your message into words. The phone line (media) carries it. The other person (receiver) decodes what they hear. But static and background noise can distort the message — even if you said it perfectly. PR\'s job is to minimize that noise.</p><p><strong>The 9 elements:</strong> Sender → Encoding → Message → Media → Decoding → Receiver, plus Noise, Feedback, and Response.</p>',
+ex:{l:'Example',b:'A telecom announcing 5G: <strong>Technical:</strong> "Deploying 3,500 MHz across 200 sites." <strong>Strategic:</strong> "Faster internet reaching 2 million more people." Same message — radically different impact.'}},
+{t:'Developing Effective Communications: Kotler\'s 8 Steps',d:'7',b:'<p>Kotler prescribes eight steps for developing effective communications. Click each step:</p>',hasSteps:1},
+{t:'Message Design: Content, Structure, Format & Source',d:'5',
+b:'<p><strong>Message content</strong> — rational appeals (facts), emotional appeals (fear, humor, pride), or moral appeals.</p><p><strong>Message structure</strong> — draw a conclusion or let audience decide? One side or both?</p><p><strong>Message format</strong> — headline, visuals, body copy. In PR: which outlet, section, platform.</p><p><strong>Message source</strong> — credibility factors: <em>expertise</em>, <em>trustworthiness</em>, <em>likability</em>.</p>'},
+{t:'The Hierarchy-of-Effects',d:'5',
+b:'<p><strong>Awareness</strong> → <strong>Knowledge</strong> → <strong>Liking</strong> → <strong>Preference</strong> → <strong>Conviction</strong> → <strong>Purchase/Action</strong></p><p><em>Awareness & Knowledge:</em> Media coverage and thought-leadership.</p><p><em>Liking & Preference:</em> Brand stories, CSR, events, influencers.</p><p><em>Conviction & Purchase:</em> Testimonials, case studies, endorsements.</p>'}
+],
+
+// MODULE 2 — EXPANDED
+m2l:[
+{t:'The Press Release — Your Most Important Written Tool',d:'8',
+b:'<p>A press release is the single most common document in PR — and the most commonly done wrong. Most press releases read like corporate announcements that nobody wants to publish. A good press release is written <em>for the journalist</em>, not for the client.</p><p><strong>Headline:</strong> This is what the journalist sees first in their inbox, alongside 200 other pitches. It must be newsworthy ("Company invests $50M in rural connectivity") not promotional ("Company is proud to announce an exciting initiative"). Under 10 words. No adjectives.</p><p><strong>Sub-headline:</strong> One sentence adding what the headline couldn\'t fit — the journalist\'s decision point: "Do I keep reading?"</p><p><strong>Lead paragraph:</strong> Who did what? When? Where? Why does anyone care? If a journalist only reads this paragraph (and many will), they should have the full story.</p><p><strong>Body paragraphs:</strong> Inverted pyramid — most important details first, background last. Include hard data (numbers, percentages, comparisons) because journalists love verifiable facts.</p><p><strong>The quote:</strong> NOT a place to repeat what the lead said. The quote adds <em>perspective</em> — the human voice behind the announcement. Write it the way the spokesperson actually talks.</p><p><strong>Boilerplate:</strong> 2-3 sentences about the company. Once written well, this rarely changes.</p>',
+hl:'<strong>Common mistakes:</strong> Starting with "We are proud/pleased/excited to announce..." (nobody cares about your emotions), including multiple announcements per release (split them), writing quotes that sound like a committee wrote them (they did, and it shows), forgetting to include a media contact with a real phone number.'},
+{t:'Op-Eds & Byline Articles — Positioning Leaders as Experts',d:'8',
+b:'<p>An op-ed is one of the most powerful tools in PR because it does something advertising never can: it puts your client\'s <em>thinking</em> — their analysis, their position, their expertise — into a respected publication, under their own name, forever.</p><p><strong>Op-ed</strong> (opposite the editorial page): 700-1,000 word opinion piece. Takes a position on a current issue. Provocative, timely, tied to the news cycle.</p><p><strong>Byline article:</strong> Longer (1,000-2,000 words) expert analysis in a trade publication. Demonstrates deep industry expertise. Less time-sensitive.</p><div class="divider"></div><p><strong>The 5-part structure:</strong></p><p><strong>1. The hook</strong> — Start with something that earns attention. A surprising fact, a current controversy, a counterintuitive claim. NOT "In today\'s rapidly changing world..."</p><p><strong>2. The thesis</strong> — State the author\'s position clearly. If nobody would disagree, it\'s not worth publishing. Bad: "We need digital transformation." Good: "The new payments regulation is the most important policy decision of the decade — but only if operators act in the next 90 days."</p><p><strong>3. The evidence</strong> — 3-4 paragraphs building the case with data, examples, comparisons.</p><p><strong>4. The counter-argument</strong> — Acknowledge the strongest opposing view, then explain why your position is still right. This separates credible thought leadership from a sales pitch.</p><p><strong>5. The call to action</strong> — End with what should change. Who should act?</p>'},
+{t:'Media Kits & Fact Sheets — Everything a Journalist Needs',d:'6',
+b:'<p>A media kit answers this question: if a journalist has 30 minutes to write a story about your client, do they have everything they need without calling you? If yes, your media kit works. If not, you\'re losing coverage.</p><p><strong>What goes in a media kit:</strong></p><p><strong>1. Company overview (1 page)</strong> — Who you are, what you do, when you were founded, where you operate, how big you are. Third person, factual.</p><p><strong>2. Key facts & figures</strong> — Revenue, customer count, employee count, market position. Journalists love numbers they can use in stories.</p><p><strong>3. Executive bios with headshots</strong> — 150-word bios for top 3-5 leaders. High-resolution headshots. Include areas of expertise so journalists know who to interview.</p><p><strong>4. Recent press releases</strong> — Last 3-5 major announcements for context.</p><p><strong>5. Brand assets</strong> — Logos (vector + PNG, light + dark backgrounds), approved images. Make these downloadable instantly.</p><p><strong>6. Contact information</strong> — Direct phone numbers and emails. Not a generic info@ address. Journalists work on deadlines.</p><p>The best media kits today live on the company\'s website as a dedicated press page — searchable, always updated, available at 3am when a journalist in a different time zone is working.</p>'},
+{t:'Event Communications — The Event is Just the Beginning',d:'8',
+b:'<p>Here\'s a mistake that wastes millions every year: companies spend all their budget on producing a beautiful event and almost nothing on communicating about it. The event itself reaches the people in the room. The <em>communications</em> can reach thousands more. 20% of the value is in the room. 80% is in the amplification.</p><div class="divider"></div><p><strong>Phase 1: Pre-event (2-4 weeks before)</strong></p><p>Save-the-date communications. Media invitations (personalized, not mass-blasted) with a news angle. Social media teasers. Spokesperson preparation — who will speak? What are their key messages?</p><p><strong>Phase 2: During the event</strong></p><p>Live social media coverage. Journalist facilitation — making sure media get access to spokespeople, quotes, usable photos. Assign one person solely to content capture — they\'re not networking, they\'re capturing the moments that become tomorrow\'s coverage.</p><p><strong>Phase 3: Post-event (24-72 hours after)</strong></p><p>Press release with key announcements. Photo and video distribution. Thank-you notes to key attendees (especially journalists and government officials). Social media recap. Follow-up meetings from connections made at the event. A post-event report within 48 hours: coverage achieved, social metrics, relationships advanced, recommended follow-ups.</p>'},
+{t:'Spokesperson Preparation & Q&A Documents',d:'7',
+b:'<p>A spokesperson can make or break a story. One bad interview can undo months of work. One great interview can establish credibility for years. The difference is almost never natural talent — it\'s preparation.</p><div class="divider"></div><p><strong>Tier 1: Expected questions</strong> — The ones any journalist would ask. "What is this announcement?" "Why now?" "What does this mean for customers?" These are easy.</p><p><strong>Tier 2: Challenging questions</strong> — What a good journalist will ask. "Your competitors already offer this — what\'s different?" "Customer satisfaction scores dropped — explain that?" These require careful preparation: acknowledge the question, then bridge to your key message.</p><p><strong>Tier 3: Crisis questions</strong> — The ones you hope nobody asks. "Can you confirm reports about...?" "Who is responsible for...?" The spokesperson must not freeze, speculate, or say "no comment."</p><div class="divider"></div><p><strong>The bridge technique:</strong> Acknowledge → redirect → deliver your message.</p><p>"That\'s an important question, and what\'s equally important is..."</p><p>"I understand why you\'d ask that. Let me give you the full picture..."</p><p>"I can\'t comment on that specific detail, but what I can tell you is..."</p><p>Before any major media interaction, run a 30-minute mock interview. Start with Tier 1, escalate to Tier 3. Most executives improve dramatically after just one practice session.</p>'},
+{t:'Influencer & KOL Strategy — Credibility You Can\'t Buy',d:'7',
+b:'<p>There\'s a critical difference between an influencer and a Key Opinion Leader (KOL). An influencer has followers. A KOL has <em>credibility</em>. An influencer gets you views. A KOL changes how people think.</p><div class="divider"></div><p><strong>Influencer:</strong> Power from audience size. People listen for entertainment/lifestyle. Best for awareness and consumer products.</p><p><strong>KOL:</strong> Power from expert reputation. People listen for knowledge and authority. Best for credibility, B2B, policy, complex topics.</p><div class="divider"></div><p><strong>The strategic approach:</strong></p><p><strong>1. Identify</strong> — Who does your target audience already trust on topics that matter to your brand?</p><p><strong>2. Build relationships first</strong> — Don\'t start with "promote us." Start with "we thought you\'d find this research interesting." Treat them as partners, not vendors.</p><p><strong>3. Co-create, don\'t dictate</strong> — KOLs reject scripted content. Give them facts, data, access — let them tell the story in their own voice.</p><p><strong>4. Measure quality, not quantity</strong> — 500 engaged comments from industry professionals are worth more than 500,000 views from teenagers. Track: who engaged? What did they say? Did it drive business outcomes?</p>'}
+],
+
+// MODULE 3 — EXPANDED
+m3l:[
+{t:'Who Are Your Stakeholders?',d:'7',
+b:'<p>The first question in any communications strategy is: "Who are we talking to?" And the most dangerous answer is: "Everyone." When you try to talk to everyone, you end up talking to no one.</p><p>A stakeholder is any person or group that can affect — or is affected by — your organization\'s actions. The skill is in <em>prioritizing</em>.</p><div class="divider"></div><p><strong>1. Government & Regulators</strong> — They set the rules, approve licenses, impose fees, and can publicly criticize or endorse you. They care about: compliance, national development, investment, job creation. Engage through: formal briefings, policy papers, private meetings, event invitations.</p><p><strong>2. Media</strong> — Journalists, editors, broadcasters, social media page admins, digital creators, and social media influencers. They shape public narrative. They care about: genuine stories, exclusivity, reliability, access to real people. Engage through: personal relationships, exclusive stories, prompt responses. Never lie — journalists have long memories.</p><p><strong>3. Customers</strong> — Current users, potential users, former users. They drive revenue and word-of-mouth. They care about: value, service quality, being heard. Engage through: social media, customer service, SMS, email.</p><p><strong>4. Employees</strong> — Your most credible ambassadors and your biggest vulnerability. They care about: transparency, fair treatment, learning news before reading it in media. <strong>Always communicate internally before externally.</strong></p><p><strong>5. Investors & Partners</strong> — They fund and enable operations. They care about: stability, growth trajectory, clear communication. Engage through: quarterly reports, briefings, one-on-one meetings.</p><p><strong>6. Community & Civil Society</strong> — NGOs, academics, cultural organizations, local leaders. They grant your social license to operate. Engage through: CSR programs, local partnerships, community events. Actions first, communications second.</p>'},
+{t:'The Influence-Urgency Matrix',d:'7',
+b:'<p>You have a finite team, finite budget, and dozens of stakeholders. How do you decide who gets attention? Plot every stakeholder on two axes: <strong>Influence</strong> (how much can they impact your reputation?) and <strong>Urgency</strong> (how time-sensitive is engaging them right now?).</p><div class="divider"></div><p><strong>Top-right: MANAGE CLOSELY (60% of effort)</strong> — High influence + high urgency. Government during policy changes, media during a crisis. They get your senior team\'s personal time, custom content, same-day responsiveness.</p><p><strong>Top-left: KEEP SATISFIED (25%)</strong> — High influence + low urgency. Key journalists during steady-state, strategic partners. Regular touchpoints — monthly newsletters, quarterly catch-ups, event invitations.</p><p><strong>Bottom-right: KEEP INFORMED (10%)</strong> — Low influence + high urgency. Customers during a service outage, employees during restructuring. Broadcast communications — social posts, press releases, FAQ pages.</p><p><strong>Bottom-left: MONITOR (5%)</strong> — Low influence + low urgency. General public, industry peers. Track what they say but don\'t proactively engage.</p>',
+hl:'<strong>Critical insight:</strong> This matrix is NOT static. It shifts with every news cycle, policy change, or crisis. A monthly reassessment should be built into your planning cadence.'},
+{t:'Tailoring Messages by Audience',d:'7',
+b:'<p>The same announcement requires <em>fundamentally different treatment</em> depending on who receives it. Your core story stays the same — but the angle, language, and medium change for each audience.</p><div class="divider"></div><p>Imagine a company launching a $50M rural connectivity initiative:</p><p><strong>For government:</strong> "In alignment with national connectivity goals, we\'re committing $50M to extend infrastructure to 300 previously unconnected communities across eight governorates."</p><p><strong>For media:</strong> "This $50M investment will bring mobile service to 1.5 million people for the first time — the single largest private-sector connectivity push in the country\'s history."</p><p><strong>For customers:</strong> "Great news — coverage is expanding to your area. Faster connections, better calls, coming soon."</p><p><strong>For investors:</strong> "Our $50M rural investment positions us to capture an estimated 1.5 million potential new subscribers with 90%+ retention rates."</p><p><strong>For employees:</strong> "Our engineers are about to do something remarkable — bringing connectivity to communities that have never had it."</p><p><strong>Same $50 million. Five completely different stories — all true, all honest, all tailored.</strong></p>'},
+{t:'Channel-Audience Matching',d:'6',
+b:'<p>It\'s not enough to know what to say — you need to know <em>where</em> to say it. Each stakeholder has preferred channels, and using the wrong one signals you don\'t understand them.</p><div class="divider"></div><p><strong>Government:</strong> ✅ Formal briefing documents, private meetings, exclusive receptions. ❌ Social media tags, mass emails.</p><p><strong>Business media:</strong> ✅ Personalized email pitches, exclusive interviews, data. ❌ Mass blast releases to 500 contacts.</p><p><strong>General public:</strong> ✅ Social media, short video content, local radio. ❌ Long corporate statements.</p><p><strong>Employees:</strong> ✅ Internal groups, company newsletter, town halls. ❌ Finding out from Twitter.</p><p><strong>Influencers & KOLs:</strong> ✅ Direct messages, exclusive access, co-creation. ❌ Generic outreach templates.</p><p><strong>Investors:</strong> ✅ Formal reports, CEO correspondence, one-on-one briefings. ❌ Social media, press releases.</p>'},
+{t:'Measuring Perception — Kotler\'s Familiarity-Favorability Matrix',d:'6',
+b:'<p>Before launching any campaign, know two things: how well your audience <em>knows</em> you (familiarity) and how positively they <em>feel</em> (favorability).</p><div class="divider"></div><p><strong>High familiarity + high favorability = "Protect and maintain"</strong> — People know you and like you. Don\'t take it for granted. Strategy: reinforcement, loyalty programs, consistent quality.</p><p><strong>High familiarity + low favorability = "Reputation problem"</strong> — People know you and don\'t like what they see. You can\'t advertise your way out. Fix the substance first, then communicate the change.</p><p><strong>Low familiarity + high favorability = "Hidden gem"</strong> — Those who know you, like you — but not enough people know you. Strategy: scale awareness through PR, media, events.</p><p><strong>Low familiarity + low favorability = "Crisis territory"</strong> — People don\'t know you and what little they\'ve heard is negative. Strategy: build credibility through third-party endorsements first. Don\'t amplify a negative perception.</p>'}
+],
+
+// CASE STUDIES — Kotler originals restored
+casesTitle:'<em>Case</em> Studies',casesDesc:'Real-world PR cases from Kotler\'s Marketing Management and foundational marketing literature.',
+cases:[
+{tags:['t','s'],title:'Dove "Campaign for Real Beauty"',body:'<p>In 2004, Dove (Unilever) built an entire IMC platform around challenging beauty stereotypes — only 2% of women described themselves as "beautiful."</p><p><strong>Advertising:</strong> Billboards with real women, not models. <strong>PR:</strong> Massive earned media through controversy. <strong>Digital:</strong> "Evolution" video went viral. <strong>Social:</strong> Community of women sharing stories. <strong>Events:</strong> Self-esteem workshops in schools.</p><p><strong>Result:</strong> Sales rose from $2.5B to $4B in a decade. Earned media far exceeded paid spend. A textbook case of IMC — every channel reinforced the same narrative.</p>'},
+{tags:['c','w'],title:'Johnson & Johnson Tylenol Crisis (1982)',body:'<p>When seven people died from cyanide-laced Tylenol, J&J faced a threat that could have destroyed the brand permanently.</p><p><strong>Response:</strong> Recalled 31 million bottles ($100M+), established toll-free hotline, transparent press conferences, CEO James Burke on national TV — not hiding behind lawyers or PR people.</p><p><strong>Tools:</strong> Daily press releases, CEO as primary spokesperson, open media access, direct marketing (coupons to rebuild purchase).</p><p><strong>Lesson:</strong> Transparency, speed, and consumer-first thinking rebuilt trust. Tylenol regained market leadership within a year. Proof that PR, done right, is more powerful than any ad campaign.</p>'},
+{tags:['s','t'],title:'Starbucks Stakeholder Ecosystem',body:'<p><strong>Employees ("Partners"):</strong> Healthcare for part-time employees — HR policy as PR strategy. Generated massive positive coverage and employee loyalty that translated to customer experience quality.</p><p><strong>Customers:</strong> "My Starbucks Idea" invited customers to propose improvements — crowdsourced innovation that doubled as a PR tool.</p><p><strong>Communities:</strong> Local store managers empowered to support neighborhood causes — hundreds of local stories, far more powerful than a single national campaign.</p><p><strong>Lesson:</strong> Starbucks treats stakeholder engagement as a system — employee satisfaction drives customer experience, which drives media stories, which drives brand perception.</p>'},
+{tags:['t','c'],title:'Nike "Just Do It" Evolution',body:'<p>From a simple tagline to a global movement. Nike adapted its core narrative across decades, channels, and social issues — maintaining consistency while evolving tone.</p><p><strong>Lesson:</strong> The strongest brands have a master narrative that flexes without breaking. "Just Do It" works for professional athletes and weekend joggers alike because it\'s about human aspiration, not product features.</p>'},
+{tags:['c','w'],title:'BP Deepwater Horizon (2010)',body:'<p>CEO Tony Hayward\'s "I\'d like my life back" quote became the textbook example of a spokesperson destroying brand trust. The crisis response prioritized corporate messaging over human empathy.</p><p><strong>Lesson:</strong> In a crisis, the spokesperson\'s tone matters as much as the facts. Empathy must come before explanation. Source credibility (Kotler\'s trustworthiness + likability) collapses when leaders appear self-interested during public suffering.</p>'},
+{tags:['s','t'],title:'Patagonia "Don\'t Buy This Jacket"',body:'<p>Patagonia told customers NOT to buy their product — and sales increased 30%. Counter-intuitive messaging that was authentic to the brand\'s environmental values.</p><p><strong>Lesson:</strong> When messaging is genuinely aligned with brand values, even radical approaches build extraordinary loyalty. Consumers reward honesty and purpose — especially when every competitor is saying "buy more."</p>'}
+],
+
+// SCENARIOS
+scTitle:'<em>Scenario</em> Lab',scDesc:'Test your strategic thinking with realistic PR situations.',
+scenarios:[
+{eye:'Scenario 01 — Crisis',tt:'The journalist\'s call',
+sit:'It\'s 9am Sunday. A journalist from a major news outlet calls your team: "We have a source telling us that your client has been overcharging customers for services for the past six months. We\'re running the story at noon. Do you have a comment?" You don\'t know if the claim is true. The CEO is traveling. You have 3 hours.',
+ch:['Tell the journalist "No comment — our CEO is unavailable."','Issue a holding statement: "We take all customer matters seriously. We are reviewing the situation and will provide a full response within 24 hours." Then start investigating internally.','Issue a holding statement, ask the journalist for specifics, immediately brief the CEO via message, pull the relevant team for emergency review, and offer the journalist an exclusive interview once you have facts.','Immediately post a social media statement denying the allegations before talking to the journalist.'],
+rt:['poor','decent','best','poor'],
+fb:['"No comment" signals guilt. The journalist runs the story without your side, and the headline becomes "Company refuses to respond."','You\'ve bought time without admitting or denying anything. But you haven\'t engaged the journalist — they\'ll write without your input.','You\'re managing the journalist relationship (they feel heard), gathering intel (what do they actually know?), escalating internally, and positioning for a controlled response.','You\'ve escalated a potentially small story into a public fight before even knowing the facts. If the claims are partially true, you\'ve destroyed credibility.']},
+{eye:'Scenario 02 — Event Communications',tt:'The event that backfires',
+sit:'You\'ve organized a major product launch event. 200 guests including media, government officials, and business leaders. Halfway through, the venue\'s power goes out completely. No backup generator. Guests are in the dark, some leaving. Social media photos are appearing.',
+ch:['Apologize, cancel the event, and issue a public apology the next day.','Move the program to the outdoor terrace, turn it into an impromptu gathering, have the CEO address the crowd with humor, and reframe on social media: "When the lights went out, the conversation got real."','Blame the venue publicly and demand compensation.','Continue in the dark using phone flashlights and pretend nothing happened.'],
+rt:['decent','best','poor','poor'],
+fb:['Professional but you\'ve lost the opportunity. The story becomes "launch event fails."','You\'ve turned a crisis into a memorable moment. The spontaneous response becomes the story — better than a perfectly executed event. This earns organic coverage.','You\'ve made the client look petty, created a vendor dispute, and delayed the business goal.','Ignoring the obvious makes the client look out of touch. Guests feel dismissed.']},
+{eye:'Scenario 03 — Message Design',tt:'The competing narratives',
+sit:'Your client has signed a partnership with a well-known local business. Good news. However, the partner has recently been in the media for unrelated corporate governance issues. You need to announce the partnership, but media might focus on the partner\'s problems.',
+ch:['Delay the announcement until the partner\'s issues blow over.','Lead with business impact — jobs, services, customer benefits. Prepare Q&A for hard questions about the partner. Brief journalists privately before the release.','Announce loudly on social media and hope positive news drowns out negatives.','Include a paragraph in the press release addressing the partner\'s governance issues directly.'],
+rt:['decent','best','poor','poor'],
+fb:['Safer but you miss the timing window, and there\'s no guarantee issues resolve.','You control the narrative by leading with the strong story, you\'re prepared for tough questions, and journalist briefings give context before they write.','Social media is exactly where people will make the connection. Without proactive management, you leave the narrative to chance.','You\'re introducing a negative topic many journalists might not have connected. Never answer a question that hasn\'t been asked.']}
+],
+
+// QUIZZES
+m1q:[{q:'What is the core principle of IMC?',o:['Spend equally across channels','Deliver consistent message across coordinated channels','Maximize earned media'],c:2},
+{q:'Which is NOT a Kotler promotional mix tool?',o:['Content Marketing','Personal Selling','Sales Promotion'],c:1},
+{q:'What does BTL stand for?',o:['Beyond The Limits','Below The Line','Between The Lines'],c:2},
+{q:'Kotler\'s three qualities that distinguish PR are:',o:['Low cost, wide reach, fast execution','High credibility, reaching hard-to-find buyers, dramatization','Measurability, scalability, repeatability'],c:2}],
+m2q:[{q:'Most important press release element for a journalist?',o:['The spokesperson quote','The company boilerplate','The lead paragraph (who, what, when, where, why)'],c:3},
+{q:'An op-ed differs from a press release because:',o:['It\'s shorter','It presents the author\'s opinion and analysis, not just facts','It doesn\'t need editing'],c:2},
+{q:'Where does 80% of an event\'s PR value come from?',o:['The venue quality','The number of attendees','The pre-event and post-event communications'],c:3},
+{q:'The "bridge technique" in spokesperson training is:',o:['Connecting topics in a press release','Acknowledging a question, then redirecting to your key message','Bridging advertising and PR budgets'],c:2}],
+m3q:[{q:'In the influence-urgency matrix, "manage closely" stakeholders get what % of resources?',o:['25%','40%','60%'],c:3},
+{q:'When a brand has HIGH familiarity but LOW favorability, the strategy is:',o:['Increase advertising','Fix real problems first, then communicate changes','Focus on new audiences'],c:2},
+{q:'When tailoring messages, what stays the same across audiences?',o:['The exact words','The channel','The core truth and story'],c:3},
+{q:'Why must employees hear news BEFORE external announcement?',o:['Legal compliance','Employees who learn from media feel disrespected and become negative ambassadors','It\'s cheaper'],c:2}],
+},
+
+// ARABIC
+ar:{
+sbTag:'منصة تعلّم العلاقات العامة',pL:'التقدّم العام',
+cfNote:'هذه المنصة للاستخدام الداخلي فقط. المحتوى ملكية خاصة ولا يجوز مشاركته خارج المؤسسة.',
+nav:{home:'الرئيسية',m1:'إطار IMC',m2:'أدوات العلاقات العامة',m3:'استراتيجية أصحاب المصلحة',cases:'دراسات حالة',sc:'معمل السيناريوهات',gls:'المصطلحات'},
+navS:{ov:'نظرة عامة',mod:'الوحدات',pr:'تطبيق',ref:'مرجع'},
+tbT:{home:'الرئيسية',m1:'الوحدة ٠١',m2:'الوحدة ٠٢',m3:'الوحدة ٠٣',cases:'دراسات الحالة',sc:'معمل السيناريوهات',gls:'المصطلحات'},
+glsT:'<em>المصطلحات</em>',glsD:'مصطلحات أساسية من أُطر كوتلر وممارسة العلاقات العامة المهنية.',
+gls:[
+{t:'IMC — الاتصالات التسويقية المتكاملة',d:'تنسيق جميع الأدوات الترويجية لرسائل متّسقة عبر كل القنوات.'},
+{t:'المزيج الترويجي',d:'أدوات كوتلر الخمس: الإعلان، العلاقات العامة، ترويج المبيعات، البيع الشخصي، التسويق المباشر.'},
+{t:'PENCILS',d:'أدوات العلاقات العامة: المطبوعات، الفعاليات، الأخبار، المجتمع، الهوية، اللوبي، المسؤولية الاجتماعية.'},
+{t:'ATL — فوق الخط',d:'اتصالات جماهيرية غير مستهدفة: تلفزيون، راديو، إعلانات مطبوعة، لوحات.'},
+{t:'BTL — تحت الخط',d:'تفاعل مستهدف ومباشر: فعاليات، رعايات، بريد مباشر، علاقات عامة، مؤثرون.'},
+{t:'TTL — عبر الخط',d:'نهج متكامل يجمع وصول ATL مع تفاعل BTL. الإعلان الرقمي يقع هنا.'},
+{t:'اتصالات ٣٦٠ درجة',d:'كل نقطة تماس منسّقة حول سردية استراتيجية واحدة — IMC بأكمل تعبيراته.'},
+{t:'تسلسل التأثيرات',d:'وعي ← معرفة ← إعجاب ← تفضيل ← اقتناع ← شراء. أداة تشخيصية لمرحلة جاهزية الجمهور.'},
+{t:'الترميز',d:'تحويل الرسالة المقصودة إلى شكل رمزي. كيف تُغلّف وتُعبّئ المعلومات لجمهور محدّد.'},
+{t:'فكّ الترميز',d:'كيف يُفسّر المُستقبِل الرسالة. العلاقات العامة الفعّالة تضمن تطابق الترميز مع إطار فكّ الترميز.'},
+{t:'الضوضاء',d:'تشويشات غير مخطّطة — رسائل منافسة، مفاهيم مسبقة، فوضى إعلامية — تغيّر كيفية استقبال الرسالة.'},
+{t:'الإعلام المكتسب',d:'تغطية تحريرية مكتسبة وليست مدفوعة. المخرج الأساسي للعلاقات العامة والقناة الأعلى مصداقية.'},
+{t:'الإعلام المدفوع',d:'أي موضع إعلامي مُشترى مباشرة: إعلانات، محتوى مموّل، منشورات معزّزة.'},
+{t:'الإعلام المملوك',d:'قنوات تتحكّم بها: موقع إلكتروني، مدوّنة، حسابات تواصل، نشرات، تطبيق.'},
+{t:'الإعلام المشترك',d:'محتوى يوزّعه ويناقشه الآخرون: مشاركات اجتماعية، محتوى المستخدمين.'},
+{t:'نموذج PESO',d:'إطار تنظيم الإعلام: مدفوع، مكتسب، مشترك، مملوك — لتخطيط الاتصالات المتكاملة.'},
+{t:'حصة الصوت',d:'نسبة محادثات القطاع التي تذكر علامتك مقابل المنافسين. مقياس تنافسي رئيسي.'},
+{t:'اختراق الرسالة',d:'هل ظهرت رسائلك الرئيسية في التغطية الإعلامية النهائية؟ يقيس تبنّي الصحفيين لسرديتك.'},
+{t:'القيمة الإعلانية المعادلة (AVE)',d:'تقدير كلفة شراء مساحة إعلانية مكافئة للتغطية المكتسبة.'},
+{t:'تحليل المشاعر',d:'قياس آلي أو يدوي لنبرة الإشارات: إيجابية، سلبية، أو محايدة.'},
+{t:'الانطباع الإعلامي',d:'مرة واحدة يُعرض فيها المحتوى لمشاهد محتمل. ليس مثل القراءة أو التفاعل الفعلي.'},
+{t:'الوصول',d:'العدد الإجمالي للأفراد الفريدين الذين رأوا محتوى. مختلف عن الانطباعات التي تحسب التكرار.'},
+{t:'التكرار',d:'متوسط عدد مرات مشاهدة كل شخص لرسالتك. التكرار الأمثل يختلف حسب الهدف والجمهور.'},
+{t:'GRP — نقاط التقييم الإجمالية',d:'الوصول × التكرار. جدول يصل لـ ٨٠٪ من المنازل بتكرار ٣ = GRP ٢٤٠.'},
+{t:'الخطّاف الخبري',d:'العنصر الآني الذي يجعل القصة ذات صلة الآن — سياسة جديدة، بيانات، حدث موسمي.'},
+{t:'البيان المبدئي',d:'إقرار مختصر يكسب وقتاً أثناء الأزمة. لا يلتزم بتفاصيل محددة.'},
+{t:'التعريف بالشركة (Boilerplate)',d:'وصف معياري في نهاية البيان الصحفي. ٢-٣ جمل.'},
+{t:'الهرم المقلوب',d:'بنية الكتابة الخبرية: الأهم أولاً، التفاصيل تنازلياً.'},
+{t:'مقال الرأي (Op-Ed)',d:'مقال رأي يُنشر باسم شخص في وسيلة إعلامية. أداة قيادة فكرية.'},
+{t:'المقال الموقّع (Byline)',d:'مقال أطول يُنشر باسم متحدث في منشور تجاري أو متخصص.'},
+{t:'الحظر الإعلامي (Embargo)',d:'اتفاق على تلقّي المعلومات مبكراً مع عدم النشر حتى موعد محدّد. مبني على الثقة.'},
+{t:'خارج السجل',d:'معلومات لا يمكن نشرها أو نسبها. محفوف بالمخاطر — تحقق دائماً من موافقة الصحفي.'},
+{t:'على الخلفية (On Background)',d:'معلومات يمكن للصحفي استخدامها لكن لا يُنسبها بالاسم.'},
+{t:'قائد الرأي الرئيسي (KOL)',d:'شخص ذو مصداقية راسخة في مجتمع محدّد. أكثر سلطة من المؤثر.'},
+{t:'صاحب مصلحة',d:'أي فرد أو مجموعة تتأثر بأعمال المؤسسة أو تؤثر فيها.'},
+{t:'مصفوفة الألفة-التفضيل',d:'أداة كوتلر التشخيصية: مدى المعرفة × مدى الإيجابية. تحدّد الاستراتيجية.'},
+{t:'مصداقية المصدر',d:'عوامل كوتلر الثلاثة: الخبرة، الموثوقية، الجاذبية.'},
+{t:'الأجواء (Atmospherics)',d:'مصطلح كوتلر للبيئات المصمّمة التي تعزّز الرسالة. الفعاليات والمساحات المُوسومة.'},
+{t:'الحقيبة الإعلامية',d:'حزمة شاملة تمنح الصحفيين كل ما يحتاجون: نبذة، حقائق، سِيَر، أصول، جهات اتصال.'},
+{t:'اتصالات الأزمات',d:'إدارة المعلومات الاستراتيجية أثناء أحداث تهدّد السمعة أو العمليات.'},
+{t:'الموقع المظلم (Dark Site)',d:'صفحة ويب أزمات جاهزة تُنشر فقط عند الحاجة. توفّر ساعات حرجة.'},
+{t:'المتحدث الرسمي',d:'الشخص المُعيّن للتحدث باسم المؤسسة أمام الإعلام والجمهور.'},
+{t:'التدريب الإعلامي',d:'تدريب المسؤولين على تقنيات المقابلات وانضباط الرسائل والأسئلة الصعبة.'},
+{t:'الجسر / المحور (Bridge)',d:'تقنية مقابلة: الاعتراف بالسؤال ثم إعادة التوجيه لرسالتك الرئيسية.'},
+{t:'اللقطة الصوتية (Sound Bite)',d:'عبارة قصيرة قابلة للاقتباس. أقل من ١٠ ثوانٍ عند النطق.'},
+{t:'القيادة الفكرية',d:'تموضع فرد أو مؤسسة كمرجع في مجال محدّد عبر المحتوى والتعليق.'},
+{t:'المسؤولية المجتمعية (CSR)',d:'ممارسات أعمال تساهم إيجاباً في المجتمع. تبني حسن النية وتولّد إعلاماً مكتسباً.'},
+{t:'ESG',d:'معايير بيئية واجتماعية وحوكمة لتقييم المسؤولية المؤسسية.'},
+{t:'بنية السردية',d:'الإطار المهيكل: سردية رئيسية ← رسائل ركائز ← نقاط إثبات ← محتوى القنوات.'},
+{t:'تقويم المحتوى',d:'أداة تخطيط تجدول المحتوى عبر القنوات. تضمن الاتساق وتمنع الفجوات.'},
+{t:'الرصد الإعلامي',d:'تتبّع منهجي للتغطية عبر المطبوع والمسموع والرقمي والاجتماعي. أساس القياس.'},
+{t:'القصاصة (Clipping)',d:'قطعة تغطية إعلامية واحدة. "القصاصات" = مجموع التغطية من حملة أو فترة.'},
+{t:'الجاذبية المعلوماتية',d:'رسالة تفصّل خصائص المنتج. تفترض معالجة عقلانية.'},
+{t:'الجاذبية التحويلية',d:'رسالة تفصّل فوائد غير المنتج أو الصورة. تستخدم المشاعر.'},
+{t:'التدفق ذو الخطوتين',d:'نظرية أن الأفكار تتدفق من الإعلام ← قادة الرأي ← المجموعات الأوسع.'},
+{t:'تدقيق الاتصالات',d:'جرد كل تفاعلات العملاء مع الشركة — نقطة البداية لتخطيط IMC.'},
+{t:'الموجز الإبداعي (Creative Brief)',d:'وثيقة من ١-٢ صفحة تغطي الرسالة والجمهور والأهداف والفوائد والوسائل.'},
+{t:'النبض (Pulsing)',d:'نمط توقيت: إعلان مستمر بمستوى منخفض معزّز بموجات دورية. النهج الموصى به.'},
+{t:'التعاقب (Flighting)',d:'إعلان خلال فترة ثم توقف ثم إعلان مجدداً. للمنتجات الموسمية.'},
+{t:'التسويق التجريبي',d:'خلق تجارب غامرة تربط المنتج بحياة المستهلك.'},
+{t:'العلاقات العامة التسويقية (MPR)',d:'علاقات عامة تدعم قسم التسويق تحديداً في ترويج المنتج وبناء الصورة.'},
+],
+homeEye:'مرحباً بكم في The Signal',homeT:'تعلّم العلاقات العامة<br><em>والاتصال</em>',
+homeD:'منصة تعليمية مبنية على أُطر فيليب كوتلر التسويقية. من النظرية إلى التطبيق.',
+ntcT:'التمرين ٠١ من سلسلة تعليمية',
+ntcB:'هذه النسخة مبنية على <strong>كتب فيليب كوتلر</strong> ودراسات حالة عالمية. النسخ القادمة ستتضمن <strong>أمثلة محلية واستراتيجيات خاصة بالسوق</strong>.',
+sM:'وحدات',sL:'دروس',sC:'دراسات حالة',sS:'سيناريوهات',ym:'الوحدات التعليمية',
+m1n:'الوحدة ٠١',m1m:'إطار كوتلر للاتصالات التسويقية المتكاملة',m1d:'العمود الفقري الاستراتيجي. من المزيج الترويجي إلى ATL/BTL/TTL.',
+m2n:'الوحدة ٠٢',m2m:'أدوات وتكتيكات العلاقات العامة',m2d:'البيانات الصحفية، مقالات الرأي، الحقائب الإعلامية، الفعاليات، وإشراك المؤثرين.',
+m3n:'الوحدة ٠٣',m3m:'خارطة أصحاب المصلحة واستراتيجية الجمهور',m3d:'تحديد وترتيب أولويات كل جمهور وتخصيص الاتصالات.',
+tabL:'الدروس',tabQ:'اختبار',tabC:'دراسة حالة',
+mc:'تمّ الإنجاز ✓',done:'مُكتمل',chk:'تحقق',qY:'صحيح!',qN:'ليست الإجابة الصحيحة.',
+min:'د',les:'دروس',
+
+m1l:[
+{t:'ما هي الاتصالات التسويقية المتكاملة؟',d:'٥',b:'<p><strong>IMC</strong> هي المفهوم الذي تدمج فيه الشركة جميع قنوات الاتصال لتقديم رسالة واضحة ومتّسقة.</p><p>العملاء لا يُفرّقون بين المصادر. إذا تعارضت الرسائل، تتآكل الثقة.</p>',hl:'<strong>كوتلر:</strong> "IMC تعني تحديد الجمهور المستهدف وتشكيل برنامج ترويجي منسّق."',ex:{l:'مثال',t:'افتتاح مطعم في بغداد',b:'<p><strong>بدون IMC:</strong> الانستغرام فاخر، المنشورات تعد بأسعار معقولة، والمدير يصفه كمكان عادي. <strong>مع IMC:</strong> قصة واحدة عبر كل القنوات.</p>'}},
+{t:'المزيج الترويجي و PENCILS',d:'٨',b:'<p>خمس أدوات رئيسية في المزيج الترويجي.</p>',hasFW:1,hasPC:1,pcIntro:'إطار PENCILS — الأدوات السبع:'},
+{t:'ATL و BTL و TTL و ٣٦٠°',d:'٦',b:'<p>نظام تصنيف عملي لكيفية وصول الاتصالات.</p>',hasATL:1,atlHL:'<strong>العلاقات العامة</strong> بالأساس BTL لكن عند انتشار التغطية تعمل بحجم ATL.'},
+{t:'الدور الفريد للعلاقات العامة',d:'٥',b:'<p><strong>١.</strong> مصداقية عالية. <strong>٢.</strong> الوصول لمن يتجنّب الإعلانات. <strong>٣.</strong> التمثيل الدرامي.</p>',hl:'<strong>المفارقة:</strong> أقوى ميزة (المصداقية المكتسبة) هي أكبر قيد — لا تتحكم بالرسالة كاملاً.'},
+{t:'نموذج عملية الاتصال',d:'٥',b:'<p>مثل مكالمة هاتفية بإشارة ضعيفة. المُرسل يرمّز، الوسيلة تنقل، المستقبِل يفكّ الترميز. الضوضاء تشوّه.</p><p><strong>٩ عناصر:</strong> المُرسل ← الترميز ← الرسالة ← الوسيلة ← فكّ الترميز ← المُستقبِل + الضوضاء والتغذية الراجعة والاستجابة.</p>',ex:{l:'مثال',b:'إعلان 5G: <strong>تقني:</strong> "نشر ٣٥٠٠ ميغاهرتز." <strong>استراتيجي:</strong> "إنترنت أسرع لمليوني شخص إضافي."'}},
+{t:'خطوات كوتلر الثمانية',d:'٧',b:'<p>ثماني خطوات لتطوير اتصالات فعّالة:</p>',hasSteps:1},
+{t:'تصميم الرسالة',d:'٥',b:'<p><strong>المحتوى</strong> — عقلاني أو عاطفي أو أخلاقي. <strong>البنية</strong> — جانب واحد أم جانبان. <strong>الشكل</strong> — الوسيلة والمنصة. <strong>المصدر</strong> — الخبرة والموثوقية والجاذبية.</p>'},
+{t:'تسلسل التأثيرات',d:'٥',b:'<p><strong>وعي</strong> ← <strong>معرفة</strong> ← <strong>إعجاب</strong> ← <strong>تفضيل</strong> ← <strong>اقتناع</strong> ← <strong>فعل</strong></p>'}
+],
+
+m2l:[
+{t:'البيان الصحفي — أهم أداة مكتوبة',d:'٨',b:'<p>البيان الصحفي يُكتب <em>للصحفي</em> لا للعميل. <strong>العنوان:</strong> خبري، محدّد، أقل من ١٠ كلمات. <strong>المقدمة:</strong> من، ماذا، متى، أين، لماذا. <strong>المتن:</strong> الهرم المقلوب. <strong>الاقتباس:</strong> يضيف منظوراً لا تكراراً. <strong>التعريف:</strong> ٣ جمل.</p>',hl:'<strong>أخطاء شائعة:</strong> البدء بـ"يسرّنا أن نعلن..." — لا أحد يهتم بمشاعركم. تضمين أكثر من إعلان واحد. اقتباسات تبدو كأنها كُتبت بلجنة.'},
+{t:'مقالات الرأي — تموضع القادة كخبراء',d:'٨',b:'<p>مقال الرأي يضع <em>تفكير</em> عميلك في منشور محترم باسمه للأبد.</p><p><strong>البنية:</strong> ١. الجذب ٢. الأطروحة ٣. الدليل ٤. الحجة المضادة ٥. الدعوة للعمل.</p>'},
+{t:'الحقائب الإعلامية — كل ما يحتاجه الصحفي',d:'٦',b:'<p>إذا كان لدى الصحفي ٣٠ دقيقة لكتابة قصة، هل لديه كل شيء بدون الاتصال بك؟</p><p>نبذة عن الشركة، أرقام رئيسية، سِيَر ذاتية بصور، بيانات حديثة، أصول العلامة، معلومات اتصال مباشرة.</p>'},
+{t:'اتصالات الفعاليات — الفعالية هي مجرد البداية',d:'٨',b:'<p>٢٠٪ من القيمة في القاعة. ٨٠٪ في التضخيم.</p><p><strong>قبل:</strong> دعوات مخصصة، تشويق اجتماعي، تحضير المتحدثين. <strong>أثناء:</strong> تغطية حيّة، تسهيل للصحفيين. <strong>بعد:</strong> بيان صحفي، توزيع صور، شكر، تقرير خلال ٤٨ ساعة.</p>'},
+{t:'تحضير المتحدث الرسمي',d:'٧',b:'<p><strong>المستوى ١:</strong> أسئلة متوقعة. <strong>المستوى ٢:</strong> أسئلة صعبة. <strong>المستوى ٣:</strong> أسئلة أزمة.</p><p><strong>تقنية الجسر:</strong> اعترف بالسؤال ← أعد التوجيه ← قدّم رسالتك.</p>'},
+{t:'استراتيجية المؤثرين وقادة الرأي',d:'٧',b:'<p>المؤثر لديه متابعون. قائد الرأي لديه <em>مصداقية</em>.</p><p><strong>١.</strong> حدّد من يثق بهم جمهورك. <strong>٢.</strong> ابنِ علاقات أولاً. <strong>٣.</strong> شارك في الإنتاج، لا تُملي. <strong>٤.</strong> قِس الجودة — ٥٠٠ تعليق من متخصصين أفضل من ٥٠٠,٠٠٠ مشاهدة.</p>'}
+],
+
+m3l:[
+{t:'من هم أصحاب المصلحة؟',d:'٧',b:'<p>الإجابة الأخطر هي "الجميع." ست فئات:</p><p><strong>١. الحكومة والجهات التنظيمية</strong> — يضعون القواعد. إحاطات رسمية واجتماعات خاصة.</p><p><strong>٢. الإعلام</strong> — صحفيون، محررون، مدراء صفحات تواصل، صنّاع محتوى رقمي، مؤثرون. علاقات شخصية.</p><p><strong>٣. العملاء</strong> — وسائل تواصل، خدمة عملاء، رسائل.</p><p><strong>٤. الموظفون</strong> — أبلغهم <strong>قبل</strong> الإعلان الخارجي دائماً.</p><p><strong>٥. المستثمرون</strong> — تقارير ربعية، إحاطات مباشرة.</p><p><strong>٦. المجتمع</strong> — برامج مسؤولية مجتمعية. الأفعال أولاً.</p>'},
+{t:'مصفوفة التأثير-الإلحاح',d:'٧',b:'<p><strong>إدارة عن كثب (٦٠٪)</strong> — تأثير عالٍ + إلحاح عالٍ.</p><p><strong>إبقاء الرضا (٢٥٪)</strong> — تأثير عالٍ + إلحاح منخفض.</p><p><strong>إبقاء المعلومات (١٠٪)</strong> — تأثير منخفض + إلحاح عالٍ.</p><p><strong>مراقبة (٥٪)</strong> — تأثير ومنخفض إلحاح منخفضان.</p>',hl:'<strong>المصفوفة ليست ثابتة.</strong> تتغيّر مع كل دورة أخبار أو أزمة.'},
+{t:'تخصيص الرسائل حسب الجمهور',d:'٧',b:'<p>نفس الإعلان بخمس نسخ مختلفة:</p><p><strong>حكومة:</strong> أهداف وطنية. <strong>إعلام:</strong> تأثير إنساني. <strong>عملاء:</strong> فائدة شخصية. <strong>مستثمرون:</strong> فرصة نمو. <strong>موظفون:</strong> فخر ومهمة.</p>'},
+{t:'مطابقة القنوات مع الجمهور',d:'٦',b:'<p><strong>حكومة:</strong> إحاطات رسمية. <strong>إعلام:</strong> عروض حصرية. <strong>عملاء:</strong> تواصل اجتماعي. <strong>موظفون:</strong> نشرات داخلية. <strong>مؤثرون:</strong> وصول حصري.</p>'},
+{t:'مصفوفة الألفة-التفضيل',d:'٦',b:'<p><strong>ألفة عالية + تفضيل عالٍ:</strong> حافظ واحمِ.</p><p><strong>ألفة عالية + تفضيل منخفض:</strong> أصلح الجوهر أولاً.</p><p><strong>ألفة منخفضة + تفضيل عالٍ:</strong> وسّع الوعي.</p><p><strong>ألفة منخفضة + تفضيل منخفض:</strong> ابنِ المصداقية أولاً.</p>'}
+],
+casesTitle:'دراسات <em>الحالة</em>',casesDesc:'حالات حقيقية من كتب كوتلر.',
+cases:[
+{tags:['t','s'],title:'حملة دوف "الجمال الحقيقي"',body:'<p>في ٢٠٠٤، بنت دوف منصة كاملة لتحدّي معايير الجمال. المبيعات من ٢.٥ إلى ٤ مليار دولار. نموذج IMC متكامل.</p>'},
+{tags:['c','w'],title:'أزمة تايلينول — جونسون آند جونسون (١٩٨٢)',body:'<p>سبع وفيات. استدعاء ٣١ مليون عبوة. شفافية كاملة. استعادة قيادة السوق خلال سنة. المعيار الذهبي لاتصالات الأزمات.</p>'},
+{tags:['s','t'],title:'منظومة ستاربكس',body:'<p>تأمين صحي للموظفين = استراتيجية علاقات عامة. مشاركة العملاء في الابتكار. مسؤولية مجتمعية محلية. كل حلقة تعزّز التالية.</p>'},
+{tags:['t','c'],title:'تطوّر Nike',body:'<p>من شعار إلى حركة عالمية. الاتساق عبر العقود مع تطوّر النبرة.</p>'},
+{tags:['c','w'],title:'كارثة BP (٢٠١٠)',body:'<p>"أريد حياتي أن تعود" — فشل المتحدث الرسمي. التعاطف قبل الشرح.</p>'},
+{tags:['s','t'],title:'باتاغونيا "لا تشترِ"',body:'<p>رسائل عكسية أصيلة. المبيعات زادت ٣٠٪. الصدق يبني ولاءً استثنائياً.</p>'}
+],
+scTitle:'معمل <em>السيناريوهات</em>',scDesc:'اختبر تفكيرك الاستراتيجي.',
+scenarios:[
+{eye:'سيناريو ٠١ — أزمة',tt:'اتصال الصحفي',sit:'صحفي يتصل: "لدينا مصدر يقول أن عميلكم يفرض رسوماً زائدة. الخبر يُنشر ظهراً." لا تعرف الحقيقة. المدير مسافر. لديك ٣ ساعات.',ch:['لا تعليق.','بيان مبدئي ثم تحقيق داخلي.','بيان مبدئي + استفسار من الصحفي + إبلاغ المدير + عرض مقابلة حصرية.','إنكار فوري على وسائل التواصل.'],rt:['poor','decent','best','poor'],fb:['"لا تعليق" توحي بالذنب.','يكسب وقتاً لكن بدون إشراك الصحفي.','تدير العلاقة وتجمع المعلومات وتحضّر استجابة محكمة.','تصعّد قبل معرفة الحقائق.']},
+{eye:'سيناريو ٠٢ — فعاليات',tt:'الفعالية تنقلب',sit:'٢٠٠ ضيف. انقطعت الكهرباء. لا مولّد. ضيوف يغادرون. صور على التواصل.',ch:['اعتذار وإلغاء.','نقل البرنامج للخارج وتحويلها للحظة لا تُنسى.','إلقاء اللوم على المكان.','الاستمرار في الظلام.'],rt:['decent','best','poor','poor'],fb:['محترف لكن الفرصة ضاعت.','تحوّل الأزمة للحظة مميزة.','يجعل العميل يبدو تافهاً.','تجاهل الواضح يُفقد المصداقية.']},
+{eye:'سيناريو ٠٣ — تصميم الرسالة',tt:'السرديات المتنافسة',sit:'شراكة مع شركة محلية معروفة لكنها في الأخبار لمشاكل حوكمة. كيف تعلن؟',ch:['تأخير الإعلان.','قيادة بالتأثير التجاري + تحضير أسئلة وأجوبة + إحاطة صحفية مسبقة.','إعلان قوي على التواصل.','معالجة مشاكل الشريك في البيان.'],rt:['decent','best','poor','poor'],fb:['أسلم لكن تفوّت التوقيت.','تتحكّم بالسردية وتستعد للصعب.','التواصل هو حيث سيربط الناس.','لا تجب سؤالاً لم يُطرح.']}
+],
+m1q:[{q:'ما المبدأ الأساسي لـ IMC؟',o:['الإنفاق بالتساوي','رسالة متّسقة عبر قنوات منسّقة','زيادة الإعلام المكتسب'],c:2},{q:'أي ليس من أدوات كوتلر؟',o:['تسويق المحتوى','البيع الشخصي','ترويج المبيعات'],c:1},{q:'BTL يعني:',o:['ما بعد الحدود','تحت الخط','بين السطور'],c:2},{q:'صفات كوتلر الثلاث للعلاقات العامة:',o:['تكلفة منخفضة ووصول واسع','مصداقية عالية والوصول لمن يصعب الوصول إليهم والتمثيل الدرامي','قابلية القياس'],c:2}],
+m2q:[{q:'أهم عنصر في البيان الصحفي؟',o:['الاقتباس','التعريف بالشركة','الفقرة الافتتاحية'],c:3},{q:'مقال الرأي يختلف لأنه:',o:['أقصر','يقدّم رأي وتحليل المؤلف','لا يحتاج تحرير'],c:2},{q:'٨٠٪ من قيمة الفعالية تأتي من:',o:['جودة المكان','عدد الحضور','الاتصالات قبل وبعد'],c:3},{q:'تقنية الجسر هي:',o:['ربط مواضيع','الاعتراف بالسؤال ثم إعادة التوجيه لرسالتك','ربط ميزانيات'],c:2}],
+m3q:[{q:'نسبة الموارد لـ"إدارة عن كثب"؟',o:['٢٥٪','٤٠٪','٦٠٪'],c:3},{q:'ألفة عالية + تفضيل منخفض:',o:['زيادة الإعلان','إصلاح المشاكل أولاً','استهداف جمهور جديد'],c:2},{q:'ما يبقى ثابتاً عبر الجماهير:',o:['الكلمات','القناة','الحقيقة الأساسية'],c:3},{q:'لماذا يعلم الموظفون أولاً؟',o:['قانوني','يشعرون بعدم الاحترام ويصبحون سلبيين','أرخص'],c:2}]
+}};
+
+// Data
+const FW={en:[{t:'Advertising',ic:'📣',d:'Paid, non-personal. High control, low credibility.'},{t:'Public Relations',ic:'📰',d:'Earned credibility. PENCILS framework. Less control.'},{t:'Sales Promotion',ic:'🎯',d:'Short-term incentives. Coupons, contests.'},{t:'Personal Selling',ic:'🤝',d:'Direct engagement. Sales teams as ambassadors.'},{t:'Direct Marketing',ic:'📬',d:'Targeted. Email, SMS. Measurable response.'}],
+ar:[{t:'الإعلان',ic:'📣',d:'مدفوع وغير شخصي.'},{t:'العلاقات العامة',ic:'📰',d:'مصداقية مكتسبة.'},{t:'ترويج المبيعات',ic:'🎯',d:'حوافز قصيرة الأجل.'},{t:'البيع الشخصي',ic:'🤝',d:'تفاعل مباشر.'},{t:'التسويق المباشر',ic:'📬',d:'مستهدف وقابل للقياس.'}]};
+const PC={en:['<strong>Publications:</strong> Reports, brochures, newsletters.','<strong>Events:</strong> Press conferences, sponsorships, CSR.','<strong>News:</strong> Press releases, media alerts.','<strong>Community:</strong> CSR, partnerships, donations.','<strong>Identity:</strong> Logos, stationery, uniforms.','<strong>Lobbying:</strong> Engaging lawmakers.','<strong>Social responsibility:</strong> Environmental, ethical practices.'],
+ar:['<strong>المطبوعات:</strong> تقارير، كتيّبات.','<strong>الفعاليات:</strong> مؤتمرات، رعايات.','<strong>الأخبار:</strong> بيانات صحفية.','<strong>المجتمع:</strong> شراكات، تبرّعات.','<strong>الهوية:</strong> شعارات، زي.','<strong>اللوبي:</strong> التعامل مع المشرّعين.','<strong>المسؤولية:</strong> ممارسات أخلاقية.']};
+const ATL={en:[{n:'ATL',c:'var(--teal)',d:'<strong>Mass, untargeted.</strong> TV, radio, print ads, billboards. High awareness, hard to measure.'},{n:'BTL',c:'var(--green)',d:'<strong>Targeted, direct.</strong> Events, sponsorships, PR, influencers. Measurable, personal.'},{n:'TTL',c:'var(--sage)',d:'<strong>Integrated.</strong> ATL reach + BTL engagement. Digital advertising lives here.'},{n:'360°',c:'var(--lime)',d:'<strong>Surrounds the consumer.</strong> Every touchpoint coordinated. IMC in its fullest expression.'}],
+ar:[{n:'ATL',c:'var(--teal)',d:'<strong>جماهيري.</strong> تلفزيون، راديو، لوحات.'},{n:'BTL',c:'var(--green)',d:'<strong>مستهدف.</strong> فعاليات، علاقات عامة.'},{n:'TTL',c:'var(--sage)',d:'<strong>متكامل.</strong> ATL + BTL.'},{n:'360°',c:'var(--lime)',d:'<strong>يحيط بالمستهلك.</strong> كل نقطة تماس منسّقة.'}]};
+const K8={en:[{t:'Identify target audience',d:'Potential buyers, current users, deciders, influencers. Profile by usage and loyalty.'},{t:'Set communication objectives',d:'Category need, brand awareness, brand attitude, purchase intention.'},{t:'Design the communications',d:'Message strategy (what), creative strategy (how), message source (who).'},{t:'Select channels',d:'Personal (face-to-face, expert, social) vs nonpersonal (media, events). Use mass to trigger word-of-mouth.'},{t:'Establish budget',d:'Affordable, %-of-sales, competitive-parity, or objective-and-task (recommended).'},{t:'Decide media mix',d:'Consumer goods → advertising. B2B → personal selling + PR. New products → PR + advertising.'},{t:'Measure results',d:'Did audience receive, recall, and act? Measure against Step 2 objectives.'},{t:'Manage integration',d:'Single narrative, cross-functional coordination, regular audits, integration owner.'}],
+ar:[{t:'تحديد الجمهور',d:'مشترون، مستخدمون، صنّاع قرار، مؤثرون.'},{t:'تحديد الأهداف',d:'حاجة الفئة، وعي العلامة، موقف العلامة، نية الشراء.'},{t:'تصميم الرسالة',d:'استراتيجية الرسالة، الإبداعية، المصدر.'},{t:'اختيار القنوات',d:'شخصية مقابل غير شخصية.'},{t:'تحديد الميزانية',d:'القدرة، نسبة المبيعات، التكافؤ، أو الهدف والمهمة.'},{t:'مزيج الوسائل',d:'سلع ← إعلان. B2B ← بيع شخصي + علاقات عامة.'},{t:'قياس النتائج',d:'وصلت؟ تذكّروها؟ تصرّفوا؟'},{t:'إدارة التكامل',d:'سردية موحّدة، تنسيق، تدقيق، مسؤول تكامل.'}]};
+
+function t(k){return T[L][k]||T.en[k]||k}
+function sL(l){L=l;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.getElementById('lEN').classList.toggle('on',l==='en');document.getElementById('lAR').classList.toggle('on',l==='ar');rSb();rP(CP)}
+function tgSb(){document.getElementById('sb').classList.toggle('open');document.getElementById('ov').classList.toggle('sh')}
+function sp(id){CP=id;rP(id);window.scrollTo(0,0);if(window.innerWidth<769)tgSb();document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('on',n.dataset.p===id));document.getElementById('tbT').textContent=t('tbT')[id]||''}
+
+function rSb(){
+const n=t('nav'),s=t('navS');
+document.getElementById('sbTag').textContent=t('sbTag');
+document.getElementById('pL').textContent=t('pL');
+document.getElementById('cfNote').textContent=t('cfNote');
+document.getElementById('sbNav').innerHTML=`
+<div class="nsl">${s.ov}</div><div class="ni ${CP==='home'?'on':''}" data-p="home" onclick="sp('home')">${n.home}</div>
+<div class="nsl">${s.mod}</div>
+<div class="ni ${CP==='m1'?'on':''}" data-p="m1" onclick="sp('m1')">${n.m1}<span class="nb">${t('m1l').length}</span></div>
+<div class="ni ${CP==='m2'?'on':''}" data-p="m2" onclick="sp('m2')">${n.m2}<span class="nb">${t('m2l').length}</span></div>
+<div class="ni ${CP==='m3'?'on':''}" data-p="m3" onclick="sp('m3')">${n.m3}<span class="nb">${t('m3l').length}</span></div>
+<div class="nsl">${s.pr}</div>
+<div class="ni ${CP==='cases'?'on':''}" data-p="cases" onclick="sp('cases')">${n.cases}</div>
+<div class="ni ${CP==='sc'?'on':''}" data-p="sc" onclick="sp('sc')">${n.sc}</div>
+<div class="nsl">${s.ref}</div>
+<div class="ni ${CP==='gls'?'on':''}" data-p="gls" onclick="sp('gls')">${n.gls}</div>`}
+
+function rP(id){
+const c=document.getElementById('mc');
+document.getElementById('tbT').textContent=t('tbT')[id]||'';
+if(id==='home')c.innerHTML=rHome();
+else if(id==='m1')c.innerHTML=rMod('m1','1',t('m1n'),t('m1m'),t('m1l'),t('m1q'));
+else if(id==='m2')c.innerHTML=rMod('m2','2',t('m2n'),t('m2m'),t('m2l'),t('m2q'));
+else if(id==='m3')c.innerHTML=rMod('m3','3',t('m3n'),t('m3m'),t('m3l'),t('m3q'));
+else if(id==='cases')c.innerHTML=rCases();
+else if(id==='sc')c.innerHTML=rSc();
+else if(id==='gls')c.innerHTML=rGls();
+uP()}
+
+function rHome(){return `
+<div class="ph"><div class="pe">${t('homeEye')}</div><div class="pt">${t('homeT')}</div><div class="pd">${t('homeD')}</div></div>
+<div class="ntc"><div style="font-size:16px;flex-shrink:0">⚡</div><div><div class="ntc-t">${t('ntcT')}</div><div class="ntc-b">${t('ntcB')}</div></div></div>
+<div class="sg"><div class="si"><div class="sv">3</div><div class="sl">${t('sM')}</div></div><div class="si"><div class="sv">${t('m1l').length+t('m2l').length+t('m3l').length}</div><div class="sl">${t('sL')}</div></div><div class="si"><div class="sv">${t('cases').length}</div><div class="sl">${t('sC')}</div></div><div class="si"><div class="sv">${t('scenarios').length}</div><div class="sl">${t('sS')}</div></div></div>
+<h3 style="font-family:var(--fd);font-size:18px;margin:24px 0 12px;font-weight:500">${t('ym')}</h3>
+<div class="mg">
+<div class="mc" onclick="sp('m1')"><div class="mcb t1"></div><div class="mcc"><div class="mcn">${t('m1n')}</div><div class="mcm">${t('m1m')}</div><div class="mcd">${t('m1d')}</div><div class="mcmt">${t('m1l').length} ${t('les')}</div></div></div>
+<div class="mc" onclick="sp('m2')"><div class="mcb t2"></div><div class="mcc"><div class="mcn">${t('m2n')}</div><div class="mcm">${t('m2m')}</div><div class="mcd">${t('m2d')}</div><div class="mcmt">${t('m2l').length} ${t('les')}</div></div></div>
+<div class="mc" onclick="sp('m3')"><div class="mcb t3"></div><div class="mcc"><div class="mcn">${t('m3n')}</div><div class="mcm">${t('m3m')}</div><div class="mcd">${t('m3d')}</div><div class="mcmt">${t('m3l').length} ${t('les')}</div></div></div>
+</div>`}
+
+function rMod(mid,num,mnum,mname,lessons,quiz){
+const caseKey=mid==='m1'?'caseDovetitle':mid==='m2'?'caseTylenolTitle':'caseStarbucksTitle';
+const caseData=mid==='m1'?t('cases')[0]:mid==='m2'?t('cases')[1]:t('cases')[2];
+return `<div class="ph"><div class="pe">${mnum}</div><div class="pt">${mname}</div></div>
+<div class="tabs"><button class="tabtn on" onclick="swT(this,'${mid}t1')">${t('tabL')}</button><button class="tabtn" onclick="swT(this,'${mid}t2')">${t('tabQ')}</button><button class="tabtn" onclick="swT(this,'${mid}t3')">${t('tabC')}</button></div>
+<div class="tp on" id="${mid}t1">${lessons.map((l,i)=>rLes(mid,i,l)).join('')}</div>
+<div class="tp" id="${mid}t2">${rQuiz(mid,quiz)}</div>
+<div class="tp" id="${mid}t3"><div class="cpt"><div class="cl cs">${L==='ar'?'دراسة حالة':'Case study'}</div><div class="ctit">${caseData.title}</div><div class="cb">${caseData.body}</div></div></div>`}
+
+function rLes(mid,i,l){
+const lid=mid+'_'+i;
+const dn=isDone(lid);
+let extra='';
+if(l.hasFW)extra+=`<div class="fw-g" id="fg${mid}${i}">${FW[L].map((f,j)=>`<div class="fw-i" onclick="clkFW('fg${mid}${i}','fd${mid}${i}',${j},this)"><span class="fw-ic">${f.ic}</span><span class="fw-nm">${f.t}</span></div>`).join('')}</div><div class="fw-d" id="fd${mid}${i}"></div>`;
+if(l.hasPC)extra+=`<div class="divider"></div><div class="cb"><p>${l.pcIntro}</p></div><div class="pcg" id="pg${mid}${i}">${'PENCILS'.split('').map((c,j)=>`<div class="pci" onclick="clkPC('pg${mid}${i}','pd${mid}${i}',${j},this)"><span class="pcl">${c}</span></div>`).join('')}</div><div class="pcd" id="pd${mid}${i}"></div>`;
+if(l.hasATL)extra+=`<div class="atg">${ATL[L].map(a=>`<div class="atc" style="border-top:3px solid ${a.c}"><div class="ath">${a.n}</div><div class="atb">${a.d}</div></div>`).join('')}</div>${l.atlHL?`<div class="hl"><p>${l.atlHL}</p></div>`:''}`;
+if(l.hasSteps)extra+=`<div class="stw" id="sw${mid}${i}">${K8[L].map((s,j)=>`<div class="str" onclick="tgSt('sd${mid}${i}${j}',this)"><div class="stnc">${j+1}</div><div class="sttc">${s.t}</div><div class="stac">▾</div></div><div class="std" id="sd${mid}${i}${j}">${s.d}</div>`).join('')}</div>`;
+if(l.hl)extra+=`<div class="hl"><p>${l.hl}</p></div>`;
+if(l.ex)extra+=`<div class="cpt"><div class="cl ex">${l.ex.l}</div>${l.ex.t?`<div class="ctit">${l.ex.t}</div>`:''}<div class="cb">${l.ex.b}</div></div>`;
+return `<div class="les"><div class="lh" onclick="tgL(this)"><div class="ln${dn?' dn':''}">${dn?'✓':(i+1)}</div><div class="ltt">${l.t}</div><div class="ldur">${l.d} ${t('min')}</div><div class="larr">▾</div></div><div class="lbd"><div class="cb">${l.b}</div>${extra}<button class="btn ${dn?'btn-ok':'btn-o'}" onclick="mc2(this,'${lid}')" ${dn?'disabled':''}style="margin-top:12px">${dn?t('done'):t('mc')}</button></div></div>`}
+
+function rQuiz(mid,qs){return `<div class="crd"><div class="crd-t">${t('tabQ')}</div></div>${qs.map((q,i)=>`<div class="qz" data-c="${q.c}"><div class="qq">${i+1}. ${q.q}</div><div class="qos">${q.o.map(o=>`<div class="qo" onclick="sqz(this)"><div class="qr"></div>${o}</div>`).join('')}</div><div class="qfb"></div></div>`).join('')}<button class="btn btn-p" onclick="chkQ(this)" style="margin-top:14px">${t('chk')}</button>`}
+
+function rCases(){return `<div class="ph"><div class="pe">${L==='ar'?'تطبيق':'Practice'}</div><div class="pt">${t('casesTitle')}</div><div class="pd">${t('casesDesc')}</div></div><div class="mg">${t('cases').map(c=>`<div class="crd" style="cursor:default"><div style="display:flex;gap:5px;margin-bottom:5px">${c.tags.map(tg=>`<span class="tag tag-${tg}">${tg}</span>`).join('')}</div><div class="crd-t">${c.title}</div><div class="crd-b">${c.body}</div></div>`).join('')}</div>`}
+
+function rSc(){return `<div class="ph"><div class="pe">${L==='ar'?'تطبيق':'Practice'}</div><div class="pt">${t('scTitle')}</div><div class="pd">${t('scDesc')}</div></div>${t('scenarios').map((s,i)=>`<div class="scc"><div class="sch"><div class="sce">${s.eye}</div><div class="sctt">${s.tt}</div></div><div class="scbd"><div class="scst">${s.sit}</div><div class="sccs" id="sc${i}">${s.ch.map((c,j)=>`<div class="scch" onclick="pSc(${i},this,${j})" data-r="${s.rt[j]}">${c}</div>`).join('')}</div><div class="scrs" id="sr${i}"></div></div></div>`).join('')}`}
+
+function rGls(filter){
+const terms=t('gls');
+const f=filter||'';
+const filtered=f?terms.filter(g=>g.t.toLowerCase().includes(f.toLowerCase())||g.d.toLowerCase().includes(f.toLowerCase())):terms;
+const sorted=filtered.sort((a,b)=>a.t.localeCompare(b.t));
+return `<div class="ph"><div class="pe">${L==='ar'?'مرجع':'Reference'}</div><div class="pt">${t('glsT')}</div><div class="pd">${t('glsD')}</div></div>
+<div style="margin-bottom:16px"><input type="text" id="glsSearch" placeholder="${L==='ar'?'ابحث في المصطلحات...':'Search terms...'}" oninput="filterGls(this.value)" style="width:100%;max-width:400px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;font-family:inherit;background:var(--bg-card)"></div>
+<div id="glsItems">${sorted.map(g=>`<div class="crd" style="cursor:default"><div class="crd-t">${g.t}</div><div class="crd-b">${g.d}</div></div>`).join('')}</div>
+<div style="margin-top:12px;font-size:11px;color:var(--txt3)">${sorted.length} ${L==='ar'?'مصطلح':'terms'}</div>`}
+
+function filterGls(v){
+const terms=t('gls');
+const filtered=v?terms.filter(g=>g.t.toLowerCase().includes(v.toLowerCase())||g.d.toLowerCase().includes(v.toLowerCase())):terms;
+const sorted=filtered.sort((a,b)=>a.t.localeCompare(b.t));
+document.getElementById('glsItems').innerHTML=sorted.map(g=>`<div class="crd" style="cursor:default"><div class="crd-t">${g.t}</div><div class="crd-b">${g.d}</div></div>`).join('');
+}
+
+// INTERACTIONS
+function swT(btn,pid){const p=btn.closest('.ct')||document.getElementById('mc');p.querySelectorAll('.tabtn').forEach(b=>b.classList.remove('on'));p.querySelectorAll('.tp').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById(pid).classList.add('on')}
+function tgL(h){h.classList.toggle('op');h.nextElementSibling.classList.toggle('op')}
+function mc2(btn,lid){saveDone(lid);const n=btn.closest('.lbd').previousElementSibling.querySelector('.ln');n.classList.add('dn');n.textContent='✓';btn.className='btn btn-ok';btn.textContent=t('done');btn.disabled=true;uP()}
+function uP(){const total=document.querySelectorAll('.ln').length;const done=document.querySelectorAll('.ln.dn').length;document.getElementById('gP').style.width=(total?Math.round(done/total*100):0)+'%'}
+function clkFW(gid,did,idx,el){document.querySelectorAll('#'+gid+' .fw-i').forEach(i=>i.classList.remove('on'));el.classList.add('on');const d=document.getElementById(did);const f=FW[L][idx];d.innerHTML=`<strong>${f.t}</strong>: ${f.d}`;d.classList.add('on')}
+function clkPC(gid,did,idx,el){document.querySelectorAll('#'+gid+' .pci').forEach(i=>i.classList.remove('on'));el.classList.add('on');const d=document.getElementById(did);d.innerHTML=PC[L][idx];d.classList.add('on')}
+function tgSt(id,row){const d=document.getElementById(id);const o=d.classList.contains('on');document.querySelectorAll('.str').forEach(r=>r.classList.remove('on'));document.querySelectorAll('.std').forEach(d=>d.classList.remove('on'));if(!o){row.classList.add('on');d.classList.add('on')}}
+function sqz(o){const q=o.closest('.qz');if(q.classList.contains('ans'))return;q.querySelectorAll('.qo').forEach(x=>x.classList.remove('sel'));o.classList.add('sel')}
+function chkQ(btn){const panel=btn.parentElement;panel.querySelectorAll('.qz').forEach(q=>{if(q.classList.contains('ans'))return;const c=parseInt(q.dataset.c);const opts=q.querySelectorAll('.qo');const sel=q.querySelector('.qo.sel');if(!sel)return;const si=Array.from(opts).indexOf(sel)+1;q.classList.add('ans');opts.forEach((o,i)=>{if(i+1===c)o.classList.add('ok');else if(o.classList.contains('sel')&&i+1!==c)o.classList.add('no')});const f=q.querySelector('.qfb');f.className='qfb sh '+(si===c?'y':'n');f.textContent=si===c?t('qY'):t('qN')})}
+function pSc(si,ch,ci){const c=document.getElementById('sc'+si);if(c.classList.contains('ans'))return;c.classList.add('ans');c.querySelectorAll('.scch').forEach(x=>x.classList.add(x.dataset.r));const s=t('scenarios');const r=document.getElementById('sr'+si);r.innerHTML='<strong>'+ch.dataset.r.toUpperCase()+':</strong> '+s[si].fb[ci];r.style.background=ch.dataset.r==='best'?'var(--ok-l)':ch.dataset.r==='decent'?'var(--warn-l)':'var(--bad-l)';r.classList.add('sh')}
+
+sL('en');
+</script>
+</body>
+</html>
